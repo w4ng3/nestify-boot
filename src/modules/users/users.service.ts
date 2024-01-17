@@ -41,6 +41,18 @@ export class UsersService {
   findOne(id: number) {
     return this.prisma.user.findUnique({
       where: { id },
+      // 嵌套查询，获取用户的所有文章
+      // 文档：https://prisma.nodejs.cn/concepts/components/prisma-client/relation-queries#嵌套读取
+      include: { posts: true },
+      // 也可以指定查询字段来进行嵌套查询
+      // select: {
+      //   email: true,
+      //   posts: {
+      //     select: {
+      //       title: true,
+      //     },
+      //   },
+      // },
     });
   }
 

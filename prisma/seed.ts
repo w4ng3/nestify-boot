@@ -14,6 +14,8 @@ async function main() {
     create: {
       name: 'Riddler',
       email: 'riddler@gmail.com',
+      // 这里使用了嵌套写入，创建用户的同时创建了一篇文章
+      // 文档： https://prisma.nodejs.cn/concepts/components/prisma-client/relation-queries#嵌套写入
       posts: {
         create: {
           title: 'Hello World',

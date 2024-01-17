@@ -19,8 +19,20 @@ export class PostsService {
   }
 
   findOne(id: number) {
+    // findUnique({where: { id }}); 获取单个文章
+    // findUnique({where: { id }}).author(); 获取单个文章的作者信息
+    // 详情文档： https://prisma.nodejs.cn/concepts/components/prisma-client/relation-queries#流畅的-api
+    // tips: 不能在同一级别上使用include和select
     return this.prisma.post.findUnique({
       where: { id },
+      include: {
+        author: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+      },
     });
   }
 
