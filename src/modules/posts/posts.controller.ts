@@ -12,7 +12,11 @@ import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Post as PostModel } from '@prisma/client';
+import { UseInterceptors } from '@nestjs/common';
+import { CacheInterceptor } from '@nestjs/cache-manager';
+
 @Controller('posts')
+@UseInterceptors(CacheInterceptor) // 使用缓存拦截器, 仅对get请求有效
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
@@ -23,6 +27,9 @@ export class PostsController {
 
   @Get()
   findAll() {
+    // 调试可以看到，第一次查询数据库，5秒内第二次查询会从缓存中获取
+    // 更多缓存内容查看文档：https://nest.nodejs.cn/techniques/caching
+    console.log('查询数据库中～ :>> ', new Date());
     return this.postsService.findAll();
   }
 

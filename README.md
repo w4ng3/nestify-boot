@@ -55,3 +55,30 @@ $ pnpm run test:cov
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+## technique
+
+### [缓存](https://nest.nodejs.cn/techniques/caching)
+
+`package.json` 文件中，已经安装了 `@nestjs/cache-manager` 和 `cache-manager` 这两个包。`@nestjs/cache-manager` 是 NestJS 的一个模块，它提供了一种简单的方式来使用缓存。 `cache-manager` 是一个通用的 Node.js 缓存模块，它支持多种缓存策略，如内存、Redis 等。
+
+你可以在你的 NestJS 应用程序中使用这些包来实现缓存。例如，你可以使用 `@CacheKey` 和 `@CacheTTL` 装饰器来缓存特定的路由处理程序的结果。
+
+```js
+import { Controller, Get, CacheKey, CacheTTL } from '@nestjs/common';
+
+@Controller('users')
+export class UsersController {
+  @Get()
+  @CacheKey('allUsers')
+  @CacheTTL(30 * 1000) // tips: cache-manager的v5版本以毫秒为单位提供ttl（v4以秒为单位）
+  getUsers() {
+    // This result will be cached for 30 seconds
+    return this.userService.findAll();
+  }
+}
+```
+
+在这个示例中，getUsers 方法的结果将被缓存30秒。在这30秒内，如果有任何对同一路由的请求，NestJS 将不会调用 getUsers 方法，而是直接从缓存中返回结果。
+
+更多方法可查看[github 仓库](https://github.com/node-cache-manager/node-cache-manager#readme)
