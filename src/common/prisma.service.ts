@@ -7,6 +7,11 @@ import { PrismaClient } from '@prisma/client';
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
   async onModuleInit() {
+    // console.log('开始连接数据库 :>> ', new Date());
     await this.$connect();
+  }
+  // tips: 如果你想要在应用程序关闭时自动断开连接，你可以使用 onApplicationShutdown 钩子。
+  async onApplicationShutdown() {
+    await this.$disconnect();
   }
 }

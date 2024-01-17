@@ -43,13 +43,13 @@ export class PostsController {
 
   /**
    * @description: 模糊查询文章列表
-   * @param {string} searchString
+   * @param {string} searchStr 搜索字符串
    * 获取请求对象信息，查看nest文档：https://nest.nodejs.cn/controllers#请求对象
    * 查询过滤运算符的prisma文档：https://prisma.nodejs.cn/reference/api-reference/prisma-client-reference#过滤条件和运算符
    */
   @Get('filter')
   async getFilteredPosts(
-    @Query('searchString') searchStr: string,
+    @Query('searchStr') searchStr: string,
   ): Promise<PostModel[]> {
     return this.postsService.posts({
       where: {

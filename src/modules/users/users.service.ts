@@ -29,6 +29,7 @@ export class UsersService {
   }
 
   create(createUserDto: CreateUserDto) {
+    console.log('createUserDto :>> ', createUserDto);
     return this.prisma.user.create({
       data: createUserDto,
     });
