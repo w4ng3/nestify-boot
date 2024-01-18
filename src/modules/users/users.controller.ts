@@ -28,7 +28,7 @@ export class UsersController {
 
   @Get(':id')
   findOne(@Param('id') id: number) {
-    console.log('id :>> type:', typeof id);
+    // console.log('id :>> type:', typeof id);
     return this.usersService.findOne(id);
   }
 
