@@ -47,10 +47,23 @@ $ pnpm run test:cov
 - 如果要同步数据库，那么使用`prisma db pull`或者`prisma db push`进行推送或拉取更新（如果在model里新增了非空字段且无默认值，那么push时会警告⚠️，需要使用`--force-reset`忽略所有警告）
 - push 和 pull 不会生成记录，如果要在`prisma/migrations`里生成记录，需要运行`migrate dev`命令
 
+### Prisma文档生成器
+
+[Prisma文档生成器](https://github.com/pantharshit00/prisma-docs-generator) 从 Prisma 架构自动生成引用，可方便的查看 model 和 可使用的TS类型，每次运行时都会自动更新参考prisma generate。
+
+scheme修改后，要更新文档请使用 `pnpm prisma:doc`命令，html文档生成在`prisma/docs`目录里。
+可运行`npx prisma-docs-generator serve`命令开端口查看或者手动打开html文件看。
+
+![Prisma 文档示例](https://user-images.githubusercontent.com/22195362/89097596-edeadc00-d3fd-11ea-91ea-86d5d8076da0.png)
+
+### 更多
+
 - 更多内容，查询[文档：数据库映射](https://www.prisma.io/docs/orm/prisma-schema/data-model/database-mapping)
 - [逆向生成数据库模型](https://blog.csdn.net/mcjentor/article/details/114157421) `npx prisma introspect`
 - [Prisma Client: CRUD](https://prisma.nodejs.cn/concepts/components/prisma-client/crud)
 - [Prisma Client: API](https://prisma.nodejs.cn/reference/api-reference/prisma-client-reference#prismaclient)
+- [生成假数据](https://github.com/luisrudge/prisma-generator-fake-data)
+- [生成 entity & DTO](https://github.com/kimjbstar/prisma-class-generator)
 
 ## License
 
