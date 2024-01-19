@@ -26,7 +26,8 @@ async function bootstrap() {
       // forbidNonWhitelisted: true, // 抛出错误，告诉我们哪些属性没有被允许
     }),
   );
-  app.enableShutdownHooks(); // 启用应用程序关闭钩子
+
+  // app.enableShutdownHooks(); // 启用应用程序关闭钩子
 
   /**
    * 注册 Fastify 钩子,在每个请求时都会执行,实现类似express的中间件功能

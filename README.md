@@ -82,3 +82,9 @@ export class UsersController {
 在这个示例中，getUsers 方法的结果将被缓存30秒。在这30秒内，如果有任何对同一路由的请求，NestJS 将不会调用 getUsers 方法，而是直接从缓存中返回结果。
 
 更多方法可查看[github 仓库](https://github.com/node-cache-manager/node-cache-manager#readme)
+
+## 进阶
+
+- 序列化，全局序列化拦截器 https://3rcd.com/wiki/nestjs-practise/chapter5#序列化拦截器
+- 自动序列化 https://3rcd.com/wiki/nestjs-practise/chapter5#自动序列化
+- CRUD 抽象化框架构建 https://3rcd.com/wiki/nestjs-practise/chapter8

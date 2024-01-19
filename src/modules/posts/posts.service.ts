@@ -3,9 +3,9 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PrismaService } from '@/common/prisma.service';
 import { Post, Prisma } from '@prisma/client';
-
 @Injectable()
 export class PostsService {
+  // 依赖注入PrismaService
   constructor(private prisma: PrismaService) {}
 
   create(createPostDto: CreatePostDto) {
@@ -17,6 +17,18 @@ export class PostsService {
 
   findAll() {
     return this.prisma.post.findMany();
+  }
+
+  page() {
+    return this.prisma.x.post.paginate({
+      orderBy: {
+        updatedAt: 'desc', // 按更新时间倒序
+      },
+      pagination: {
+        page: 1,
+        pageSize: 5,
+      },
+    });
   }
 
   findOne(id: number) {

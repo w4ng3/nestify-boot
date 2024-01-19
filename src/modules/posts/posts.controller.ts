@@ -29,8 +29,13 @@ export class PostsController {
   findAll() {
     // 调试可以看到，第一次查询数据库，5秒内第二次查询会从缓存中获取
     // 更多缓存内容查看文档：https://nest.nodejs.cn/techniques/caching
-    console.log('查询数据库中～ :>> ', new Date());
+    // console.log('查询数据库中～ :>> ', new Date());
     return this.postsService.findAll();
+  }
+
+  @Get('page')
+  page() {
+    return this.postsService.page();
   }
 
   @Get(':id')
