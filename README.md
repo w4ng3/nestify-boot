@@ -64,6 +64,7 @@ scheme修改后，要更新文档请使用 `pnpm prisma:doc`命令，html文档�
 - [Prisma Client: API](https://prisma.nodejs.cn/reference/api-reference/prisma-client-reference#prismaclient)
 - [生成假数据](https://github.com/luisrudge/prisma-generator-fake-data)
 - [生成 entity & DTO](https://github.com/kimjbstar/prisma-class-generator)
+- [prisma社区生态](https://www.prisma.io/docs/orm/prisma-schema/overview/generators#community-generators)
 
 ## License
 
@@ -101,3 +102,10 @@ export class UsersController {
 - 序列化，全局序列化拦截器 https://3rcd.com/wiki/nestjs-practise/chapter5#序列化拦截器
 - 自动序列化 https://3rcd.com/wiki/nestjs-practise/chapter5#自动序列化
 - CRUD 抽象化框架构建 https://3rcd.com/wiki/nestjs-practise/chapter8
+
+## CRUD 生成器
+
+- [增删改查生成器（仅限 TypeScript）](https://nest.nodejs.cn/recipes/crud-generator)
+
+  例如，运行 `nest g resource modules/users --no-spec` ，
+  就会在 src/modules/users 目录下生成 users 的 dto & entities & module & controller & service 文件，`--no-spec`是避免生成测试文件。

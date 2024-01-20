@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import paginationExtension from '@/lib/prisma-pagination';
+import paginationExtension from '@/common/prisma/extends/prisma-pagination';
 
 /**
  * 扩展客户端类型，更好的TS支持

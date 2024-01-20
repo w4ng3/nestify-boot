@@ -6,6 +6,8 @@ import {
 } from '@nestjs/platform-fastify';
 import { useContainer } from 'class-validator';
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
+import { SuccessResponse } from './common/response/success-response';
+import { HttpFaild } from './common/response/http-faild';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -42,6 +44,11 @@ async function bootstrap() {
       console.log(`Incoming request for:${request.method} - ${request.url}`);
       if (request.body) console.log('Request body:', request.body);
     });
+
+  // 将 SuccessResponse 拦截器注册为全局拦截器
+  app.useGlobalInterceptors(new SuccessResponse());
+  // 捕捉全局错误
+  app.useGlobalFilters(new HttpFaild());
 
   await app.listen(3000, '0.0.0.0');
 }
