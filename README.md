@@ -79,7 +79,7 @@ Nest is [MIT licensed](LICENSE).
 你可以在你的 NestJS 应用程序中使用这些包来实现缓存。例如，你可以使用 `@CacheKey` 和 `@CacheTTL` 装饰器来缓存特定的路由处理程序的结果。
 
 ```js
-import { Controller, Get, CacheKey, CacheTTL } from '@nestjs/common';
+import { Controller, Get, CacheKey, CacheTTL } from '@nestjs/common'
 
 @Controller('users')
 export class UsersController {
@@ -88,7 +88,7 @@ export class UsersController {
   @CacheTTL(30 * 1000) // tips: cache-manager的v5版本以毫秒为单位提供ttl（v4以秒为单位）
   getUsers() {
     // This result will be cached for 30 seconds
-    return this.userService.findAll();
+    return this.userService.findAll()
   }
 }
 ```
@@ -109,3 +109,11 @@ export class UsersController {
 
   例如，运行 `nest g resource modules/users --no-spec` ，
   就会在 src/modules/users 目录下生成 users 的 dto & entities & module & controller & service 文件，`--no-spec`是避免生成测试文件。
+
+## OpenAPI/Swagger 文档
+
+使用[@nestjs/swagger](https://nest.nodejs.cn/openapi/introduction)集成swagger功能。
+
+SwaggerModule 在路由处理程序中搜索所有 @Body()、@Query() 和 @Param() 装饰器以生成 API 文档。它还通过利用反射创建相应的模型定义，我们主要的心智负担在 DTO 上定义属性，当然，这个也可以靠[CLI插件](https://nest.nodejs.cn/openapi/cli-plugin)帮助生成，或者使用 Github Copilot 来面向TAB编程。
+
+项目运行后打开 `http://localhost:3000/api#` 查看web文档，也可在`http://localhost:3000/api-json`查看json数据，导入到 Apifox 太方便了。

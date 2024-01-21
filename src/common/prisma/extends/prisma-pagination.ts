@@ -2,12 +2,14 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client'
 
 type PaginationOptions = {
-  page?: number;
-  pageSize?: number;
-};
+  /** 当前页码 */
+  page?: number
+  /** 每页条数 */
+  pageSize?: number
+}
 /**
  * @description: 为PrismaClient添加分页功能
  * 代码参考自 github.com/mohammadhosseinmoradi/prisma-pagination-extension
@@ -20,44 +22,41 @@ export default Prisma.defineExtension({
       async paginate<T, A>(
         this: T,
         args?: Prisma.Exact<A, Prisma.Args<T, 'findMany'>> & {
-          pagination?: PaginationOptions;
+          pagination?: PaginationOptions
         },
       ) {
-        const { pagination, ...operationArgs } = (args ?? {}) as any;
+        const { pagination, ...operationArgs } = (args ?? {}) as any
 
         // Calculate the page.
-        const page = args?.pagination?.page ? Number(args.pagination.page) : 1;
+        const page = args?.pagination?.page ? Number(args.pagination.page) : 1
 
         // Calculate the pageSize.
-        const pageSize = args?.pagination?.pageSize
-          ? Number(args.pagination.pageSize)
-          : 12;
+        const pageSize = args?.pagination?.pageSize ? Number(args.pagination.pageSize) : 12
 
         // Calculate the skip.
-        const skip = page > 1 ? pageSize * (page - 1) : 0;
+        const skip = page > 1 ? pageSize * (page - 1) : 0
 
         // Run two operations in parallel and get results.
-        const [data, total]: [Prisma.Result<T, A, 'findMany'>, number] =
-          await Promise.all([
-            (this as any).findMany({
-              ...operationArgs,
-              skip,
-              take: pageSize,
-            }),
-            (this as any).count({ where: operationArgs?.where }),
-          ]);
+        const [data, total]: [Prisma.Result<T, A, 'findMany'>, number] = await Promise.all([
+          (this as any).findMany({
+            ...operationArgs,
+            skip,
+            take: pageSize,
+          }),
+          (this as any).count({ where: operationArgs?.where }),
+        ])
 
         return {
-          list: data,
           page,
           pageSize,
           pageCount: Math.ceil(total / pageSize),
           total,
-        };
+          list: data,
+        }
       },
     },
   },
-});
+})
 // 解释代码
 // 1. 首先，我们使用 Prisma.defineExtension 创建一个新的 Prisma 扩展。
 // 2. 然后，我们使用 model.$allModels 选择所有模型。

@@ -1,10 +1,5 @@
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  HttpException,
-} from '@nestjs/common';
-import { FastifyRequest, FastifyReply } from 'fastify';
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from '@nestjs/common'
+import { FastifyRequest, FastifyReply } from 'fastify'
 
 /**
  * @class HttpFaild
@@ -15,17 +10,17 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 // 接口异常拦截器
 export class HttpFaild implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
-    const ctx = host.switchToHttp();
-    const request = ctx.getRequest<FastifyRequest>();
-    const response = ctx.getResponse<FastifyReply>();
-    const status = exception.getStatus();
+    const ctx = host.switchToHttp()
+    const request = ctx.getRequest<FastifyRequest>()
+    const response = ctx.getResponse<FastifyReply>()
+    const status = exception.getStatus()
 
-    let msg = exception.getResponse();
+    let msg = exception.getResponse()
     if (typeof msg === 'object') {
-      msg = msg['message'];
+      msg = msg['message']
       // 未通过class-validator验证的错误信息会以数组的形式返回，这里将其转换为字符串
       if (Array.isArray(msg)) {
-        msg = msg.join(';');
+        msg = msg.join(';')
       }
     }
 
@@ -35,12 +30,12 @@ export class HttpFaild implements ExceptionFilter {
       time: new Date(),
       msg,
       success: false,
-    };
+    }
 
     // 对默认的 404 进行特殊处理
     // if (status === HttpStatus.NOT_FOUND) {
     //   data.msg = `接口 ${request.method} -> ${request.url} 无效`;
     // }
-    void response.code(status).send(data);
+    void response.code(status).send(data)
   }
 }

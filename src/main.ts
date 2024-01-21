@@ -1,13 +1,12 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import {
-  FastifyAdapter,
-  NestFastifyApplication,
-} from '@nestjs/platform-fastify';
-import { useContainer } from 'class-validator';
-import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
-import { SuccessResponse } from './common/response/success-response';
-import { HttpFaild } from './common/response/http-faild';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { NestFactory } from '@nestjs/core'
+import { AppModule } from './app.module'
+import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify'
+import { useContainer } from 'class-validator'
+import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe'
+import { SuccessResponse } from './common/response/success-response'
+import { HttpFaild } from './common/response/http-faild'
+import { SwaggerModule, DocumentBuilder, SwaggerDocumentOptions } from '@nestjs/swagger'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -18,8 +17,8 @@ async function bootstrap() {
       logger: process.env.NODE_ENV === 'development' ? false : false,
       ignoreTrailingSlash: true,
     }),
-  );
-  useContainer(app.select(AppModule), { fallbackOnErrors: true });
+  )
+  useContainer(app.select(AppModule), { fallbackOnErrors: true })
   // 全局管道,在应用级别绑定 ValidationPipe 开始，从而确保所有端点都受到保护，不会接收到不正确的数据
   app.useGlobalPipes(
     new ValidationPipe({
@@ -27,7 +26,7 @@ async function bootstrap() {
       whitelist: true, // 这将自动删除非白名单属性（那些在验证类DTO中没有任何装饰器的属性）
       // forbidNonWhitelisted: true, // 抛出错误，告诉我们哪些属性没有被允许
     }),
-  );
+  )
 
   // app.enableShutdownHooks(); // 启用应用程序关闭钩子
 
@@ -41,15 +40,37 @@ async function bootstrap() {
     .getHttpAdapter()
     .getInstance()
     .addHook('preHandler', async (request, reply) => {
-      console.log(`Incoming request for:${request.method} - ${request.url}`);
-      if (request.body) console.log('Request body:', request.body);
-    });
+      console.log(`Incoming request for:${request.method} - ${request.url}`)
+      if (request.body) console.log('Request body:', request.body)
+    })
 
   // 将 SuccessResponse 拦截器注册为全局拦截器
-  app.useGlobalInterceptors(new SuccessResponse());
+  app.useGlobalInterceptors(new SuccessResponse())
   // 捕捉全局错误
-  app.useGlobalFilters(new HttpFaild());
+  app.useGlobalFilters(new HttpFaild())
 
-  await app.listen(3000, '0.0.0.0');
+  // swagger api 文档，仅在开发环境下开启
+  if (process.env.NODE_ENV === 'development') {
+    const config = new DocumentBuilder()
+      .setTitle('nest-fastify-api 接口文档')
+      .setDescription(
+        '-你好哇，crud boy，查看json数据请导航到 <a>http://localhost:3000/api-json</a>',
+      )
+      .setVersion('1.0')
+      .addSecurity('bearer', {
+        type: 'http',
+        scheme: 'bearer',
+      })
+      .setExternalDoc('查看更多', 'https://swagger.io')
+      .addServer('http://localhost:3000', '本地开发环境')
+      .build()
+    const options: SwaggerDocumentOptions = {
+      operationIdFactory: (controllerKey: string, methodKey: string) => methodKey,
+    }
+    const document = SwaggerModule.createDocument(app, config, options)
+    SwaggerModule.setup('api', app, document)
+  }
+  // 监听端口
+  await app.listen(3000, '0.0.0.0')
 }
-void bootstrap();
+void bootstrap()
