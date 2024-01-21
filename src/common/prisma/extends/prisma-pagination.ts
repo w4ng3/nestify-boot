@@ -1,7 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { PaginatedDto } from '@/common/response/dto/paginate.dto'
 import { Prisma } from '@prisma/client'
 
 type PaginationOptions = {
@@ -46,13 +43,14 @@ export default Prisma.defineExtension({
           (this as any).count({ where: operationArgs?.where }),
         ])
 
-        return {
+        const results: PaginatedDto<any> = {
           page,
           pageSize,
           pageCount: Math.ceil(total / pageSize),
           total,
           list: data,
         }
+        return results
       },
     },
   },

@@ -4,7 +4,7 @@ import { CreatePostDto, UpdatePostDto } from './post.dto'
 import { Post as PostModel } from '@prisma/client'
 import { UseInterceptors } from '@nestjs/common'
 import { CacheInterceptor } from '@nestjs/cache-manager'
-import { ApiTags, ApiOkResponse } from '@nestjs/swagger'
+import { ApiTags, ApiOkResponse, ApiOperation } from '@nestjs/swagger'
 import { PaginatedDto } from '@/common/response/dto/paginate.dto'
 import { ApiPaginatedResponse } from '@/common/response/ApiPaginatedResponse'
 import { PostVo } from './post.vo'
@@ -16,6 +16,7 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @ApiOkResponse({ type: PostVo })
+  @ApiOperation({ summary: '创建文章' })
   @Post()
   create(@Body() createPostDto: CreatePostDto) {
     return this.postsService.create(createPostDto)
