@@ -5,9 +5,9 @@ import { Post as PostModel } from '@prisma/client'
 import { UseInterceptors } from '@nestjs/common'
 import { CacheInterceptor } from '@nestjs/cache-manager'
 import { ApiTags, ApiOkResponse, ApiOperation } from '@nestjs/swagger'
-import { PaginatedDto } from '@/common/response/dto/paginate.dto'
 import { ApiPaginatedResponse } from '@/common/response/ApiPaginatedResponse'
 import { PostVo } from './post.vo'
+import { Public } from '@/modules/auth/auth.guard'
 
 @ApiTags('posts')
 @Controller('posts')
@@ -23,6 +23,7 @@ export class PostsController {
   }
 
   @ApiOkResponse({ type: [PostVo] })
+  @Public()
   @Get('list')
   findAll() {
     // 调试可以看到，第一次查询数据库，5秒内第二次查询会从缓存中获取
@@ -33,7 +34,7 @@ export class PostsController {
 
   @ApiPaginatedResponse(PostVo)
   @Get('page')
-  page(): Promise<PaginatedDto<PostVo>> {
+  page() {
     return this.postsService.page()
   }
 

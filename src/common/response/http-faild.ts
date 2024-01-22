@@ -13,15 +13,21 @@ export class HttpFaild implements ExceptionFilter {
     const ctx = host.switchToHttp()
     const request = ctx.getRequest<FastifyRequest>()
     const response = ctx.getResponse<FastifyReply>()
+    const resp = exception.getResponse()
     const status = exception.getStatus()
+    let msg: string | string[]
 
-    let msg = exception.getResponse()
-    if (typeof msg === 'object') {
-      msg = msg['message']
+    if (typeof resp === 'string') {
+      msg = resp
+    } else if (typeof resp === 'object') {
+      // resp 若为 object，则通常包含两个属性：statusCode 和 message，还有一个可选的属性 error
+      msg = resp['message']
       // 未通过class-validator验证的错误信息会以数组的形式返回，这里将其转换为字符串
       if (Array.isArray(msg)) {
         msg = msg.join(';')
       }
+      // 从 object 中取出 statusCode,如果没有则使用 HttpException 的默认状态码
+      // status = resp['statusCode'] || status
     }
 
     const data: THttpErrorResponse = {

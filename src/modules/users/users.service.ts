@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { CreateUserDto } from './dto/create-user.dto'
-import { UpdateUserDto } from './dto/update-user.dto'
+import { CreateUserDto, UpdateUserDto } from './user.dto'
 import { PrismaService } from '@/common/prisma/prisma.service'
 import { User, Prisma } from '@prisma/client'
 
@@ -45,15 +44,12 @@ export class UsersService {
       // 嵌套查询，获取用户的所有文章
       // 文档：https://prisma.nodejs.cn/concepts/components/prisma-client/relation-queries#嵌套读取
       include: { posts: true },
-      // 也可以指定查询字段来进行嵌套查询
-      // select: {
-      //   email: true,
-      //   posts: {
-      //     select: {
-      //       title: true,
-      //     },
-      //   },
-      // },
+    })
+  }
+
+  findOneByEmail(email: string) {
+    return this.prisma.user.findUnique({
+      where: { email },
     })
   }
 

@@ -128,3 +128,11 @@ SwaggerModule 在路由处理程序中搜索所有 @Body()、@Query() 和 @Param
 
 - 在`src/common/response/http-faild.ts`里定义了HttpException拦截器，拦截后返回统一的json格式。
   - 但它不会拦截 Prisma 的异常，关于Prisma异常，可以重新定义一个 @Catch(PrismaClientValidationError)的拦截器，或者在 service 层手动处理，查看[官方文档:处理异常和错误](https://prisma.nodejs.cn/concepts/components/prisma-client/handling-exceptions-and-errors)
+
+## [JWT 身份验证](https://nest.nodejs.cn/security/authentication#jwt-%E4%BB%A4%E7%89%8C)
+
+在`class AuthGuard`中定义了全局守卫，如果要放开某些接口，使用自定义装饰器@Public()即可，参考`auth/login`接口。
+
+## 环境变量配置
+
+使用 [@nestjs/config](https://nest.nodejs.cn/techniques/configuration)

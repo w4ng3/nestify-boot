@@ -1,8 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common'
 import { UsersService } from './users.service'
-import { CreateUserDto } from './dto/create-user.dto'
-import { UpdateUserDto } from './dto/update-user.dto'
-// import { User as UserModel, Post as PostModel } from '@prisma/client';
+import { CreateUserDto, UpdateUserDto } from './user.dto'
 import { ApiTags, ApiOkResponse } from '@nestjs/swagger'
 
 @ApiTags('users')
@@ -29,7 +27,6 @@ export class UsersController {
 
   @Patch(':id')
   update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
-    // +id 将 id 转换为 number 类型
     return this.usersService.update(id, updateUserDto)
   }
 

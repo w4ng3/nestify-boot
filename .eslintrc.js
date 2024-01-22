@@ -39,6 +39,7 @@ module.exports = {
     '@typescript-eslint/no-unsafe-assignment': 'off', // 禁止对any类型的值进行赋值
     '@typescript-eslint/ban-ts-comment': 'off', // 禁止使用@ts-ignore注释
     '@typescript-eslint/no-unsafe-enum-comparison': 'off', // 禁止对any类型的值进行枚举比较
+    '@typescript-eslint/no-unsafe-argument': 'error', // 禁止对any类型的值进行参数赋值
 
     /** prettir相关 */
     'prettier/prettier': ['warn', {
