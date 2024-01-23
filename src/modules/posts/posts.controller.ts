@@ -4,12 +4,13 @@ import { CreatePostDto, UpdatePostDto } from './post.dto'
 import { Post as PostModel } from '@prisma/client'
 import { UseInterceptors } from '@nestjs/common'
 import { CacheInterceptor } from '@nestjs/cache-manager'
-import { ApiTags, ApiOkResponse, ApiOperation } from '@nestjs/swagger'
+import { ApiTags, ApiOkResponse, ApiOperation, ApiBearerAuth } from '@nestjs/swagger'
 import { ApiPaginatedResponse } from '@/common/response/ApiPaginatedResponse'
 import { PostVo } from './post.vo'
-import { Public } from '@/modules/auth/auth.guard'
+import { Public } from '@/common/decorator/public.decorator'
 
 @ApiTags('posts')
+@ApiBearerAuth()
 @Controller('posts')
 @UseInterceptors(CacheInterceptor) // 使用缓存拦截器, 仅对get请求有效
 export class PostsController {

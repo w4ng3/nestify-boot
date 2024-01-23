@@ -5,3 +5,5 @@ export class AuthLoginVo extends PickType(CreateUserDto, ['email', 'name', 'role
   @ApiProperty({ description: 'JWT token', example: 'abcdefjhijklmn' })
   access_token: string
 }
+
+export class ProfileVo extends PickType(CreateUserDto, ['email', 'name', 'role'] as const) {}

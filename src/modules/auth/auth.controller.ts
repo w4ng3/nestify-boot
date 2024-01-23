@@ -1,11 +1,13 @@
-import { Body, Controller, Post, Get, Request } from '@nestjs/common'
+import { Body, Controller, Post, Get } from '@nestjs/common'
 import { AuthService } from './auth.service'
-import { ApiTags, ApiOkResponse } from '@nestjs/swagger'
-import { AuthLoginVo } from './auth.vo'
+import { ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger'
+import { AuthLoginVo, ProfileVo } from './auth.vo'
 import { LoginUserDto } from '../users/user.dto'
-import { Public } from './auth.guard'
+import { User } from '@/common/decorator/user.decorator'
+import { Public } from '@/common/decorator/public.decorator'
 
 @ApiTags('auth')
+@ApiBearerAuth()
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -17,11 +19,9 @@ export class AuthController {
     return this.authService.login(loginUserDto)
   }
 
+  @ApiOkResponse({ type: ProfileVo, description: '根据token获取当前用户信息' })
   @Get('profile')
-  getProfile(@Request() req: any) {
-    // 💡 通过 AuthGuard 守卫，返回token解析后的用户信息
-    return req.user
+  getProfile(@User('id') id: number): Promise<ProfileVo> {
+    return this.authService.profile(id)
   }
 }
-
-// 如果同时使用@Request 和 @Body 装饰器，那么 @Body 装饰器必须在 @Request 装饰器之前使用，否则会抛出异常。因为 @Request 装饰器会覆盖 @Body 装饰器的值。

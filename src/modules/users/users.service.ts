@@ -43,7 +43,7 @@ export class UsersService {
       where: { id },
       // 嵌套查询，获取用户的所有文章
       // 文档：https://prisma.nodejs.cn/concepts/components/prisma-client/relation-queries#嵌套读取
-      include: { posts: true },
+      // include: { posts: true },
     })
   }
 

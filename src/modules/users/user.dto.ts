@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, IsOptional } from 'class-validator'
+import { IsEmail, IsNotEmpty, IsString, IsOptional, IsNumberString } from 'class-validator'
 import { ApiProperty, PartialType, PickType } from '@nestjs/swagger'
 
 export class CreateUserDto {
@@ -30,3 +30,9 @@ export class CreateUserDto {
 export class UpdateUserDto extends PartialType(CreateUserDto) {}
 
 export class LoginUserDto extends PickType(CreateUserDto, ['email', 'password'] as const) {}
+
+export class FindOneParams {
+  @ApiProperty({ description: '用户id', example: 1 })
+  @IsNumberString({}, { message: 'id必须为数字类型' })
+  id: number
+}

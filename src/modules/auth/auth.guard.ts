@@ -2,16 +2,8 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { JwtService } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
 import { FastifyRequest } from 'fastify'
-import { SetMetadata } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
-
-/**
- * @description 提供一种将路由声明为公共的机制
- * 使用 SetMetadata 装饰器工厂函数创建自定义装饰器。
- * 得到 @Public()装饰器，我们可以用它来装饰任何方法，以便在路由处理程序中访问它。
- */
-export const IS_PUBLIC_KEY = 'isPublic'
-export const Public = () => SetMetadata(IS_PUBLIC_KEY, true)
+import { IS_PUBLIC_KEY } from '@/common/decorator/public.decorator'
 
 /**
  * @description 用于验证用户是否登录的守卫

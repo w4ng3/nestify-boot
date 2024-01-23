@@ -57,10 +57,7 @@ async function bootstrap() {
         '-你好哇，crud boy，查看json数据请导航到 <a>http://localhost:3000/api-json</a>',
       )
       .setVersion('1.0')
-      .addSecurity('bearer', {
-        type: 'http',
-        scheme: 'bearer',
-      })
+      .addBearerAuth()
       .setExternalDoc('查看更多', 'https://swagger.io')
       .addServer('http://localhost:3000', '本地开发环境')
       .build()
