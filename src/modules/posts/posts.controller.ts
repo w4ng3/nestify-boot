@@ -5,7 +5,7 @@ import { Post as PostModel } from '@prisma/client'
 import { UseInterceptors } from '@nestjs/common'
 import { CacheInterceptor } from '@nestjs/cache-manager'
 import { ApiTags, ApiOkResponse, ApiOperation, ApiBearerAuth } from '@nestjs/swagger'
-import { ApiPaginatedResponse } from '@/common/response/ApiPaginatedResponse'
+import { ApiPaginatedResponse } from '@/common/decorator/paginated.decorator'
 import { PostVo } from './post.vo'
 import { Public } from '@/common/decorator/public.decorator'
 

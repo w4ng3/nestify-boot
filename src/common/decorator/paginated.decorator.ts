@@ -1,6 +1,6 @@
 import { Type, applyDecorators } from '@nestjs/common'
 import { ApiExtraModels, ApiOkResponse, getSchemaPath } from '@nestjs/swagger'
-import { PaginatedDto } from './dto/paginate.dto'
+import { PaginatedDto } from '../response/dto/paginate.dto'
 /**
  * @description 为 PaginatedDto 创建一个自定义装饰器, 用于 Swagger UI 的文档生成
  */

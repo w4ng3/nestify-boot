@@ -4,7 +4,7 @@ import { AuthService } from './auth.service'
 import { UsersModule } from '../users/users.module'
 import { JwtModule } from '@nestjs/jwt'
 import { ConfigModule, ConfigService } from '@nestjs/config'
-import { ConfigEnum } from '@/config/config.enum'
+import { ConfigEnum } from '@/config/enum.config'
 import { AuthGuard } from './auth.guard'
 /**
  * 全局注册 JWT 模块

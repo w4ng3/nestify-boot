@@ -76,5 +76,11 @@ async function bootstrap() {
   }
   // 监听端口
   await app.listen(3000, '0.0.0.0')
+
+  return nestWinston
 }
-void bootstrap()
+void bootstrap().then((logger) => {
+  logger.log(
+    `successfully started server, url: http://localhost:3000, env: ${process.env.NODE_ENV}`,
+  )
+})

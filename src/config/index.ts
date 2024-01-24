@@ -1,1 +1,1 @@
-export const developer = 'wang dong';
+export const developer = 'wang dong'
