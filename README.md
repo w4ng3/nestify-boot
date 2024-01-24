@@ -139,7 +139,7 @@ SwaggerModule 在路由处理程序中搜索所有 @Body()、@Query() 和 @Param
 import { User, UserJwtType } from '@/common/decorator/user.decorator'
 
 @Get('test')
-test(@User('id') id: number, @User() user: UserJwtType) {
+test(@ReqUser('id') id: number, @ReqUser() user: UserJwtType) {
   return {
     id,
     user: user,
@@ -147,6 +147,17 @@ test(@User('id') id: number, @User() user: UserJwtType) {
 }
 ```
 
+目前没有设计`refresh_token`给前端使用，我想不明白这么做的必要性，为了安全不如搞Https协议还有[CORS](https://nest.nodejs.cn/security/cors)和[CSRF保护](https://nest.nodejs.cn/security/csrf)，避免XSS攻击等。唯一的作用可能是存到数据库后用来感知用户退出登录、切换账号操作。
+
+- [你有没有这样的疑惑，为什么要refreshToken？](https://juejin.cn/post/7081578246055133214)
+- [前端使用RefreshToken?是道德的沦丧还是前端的瞎搞?](https://juejin.cn/post/7263117148373205049?from=search-suggest)
+
 ## 环境变量配置
 
 使用 [@nestjs/config](https://nest.nodejs.cn/techniques/configuration)
+
+## 日志
+
+使用了`nest-winston` 和 `winston`来打印日志，`winston-daily-rotate-file`负责管理日志文件，定期压缩与删除。
+
+已在全局响应和拦截器里使用，可参考用法。[Link~](src/common/response/http-faild.ts)

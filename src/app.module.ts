@@ -6,12 +6,15 @@ import { PostsModule } from './modules/posts/posts.module'
 import { PrismaModule } from './common/prisma/prisma.module'
 import { AuthModule } from './modules/auth/auth.module'
 import { ConfigModule } from '@nestjs/config'
+import { WinstonModule } from 'nest-winston'
+import { WinstonOptionsConfig } from '@/config/winston.config'
 
 const envFilePath = `.env.${process.env.NODE_ENV || `development`}`
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath, cache: true }),
+    WinstonModule.forRoot(WinstonOptionsConfig),
     PrismaModule,
     UsersModule,
     PostsModule,

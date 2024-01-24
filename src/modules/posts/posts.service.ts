@@ -8,7 +8,6 @@ export class PostsService {
   constructor(private prisma: PrismaService) {}
 
   create(createPostDto: CreatePostDto) {
-    console.log('createPostDto :>> ', createPostDto)
     return this.prisma.post.create({
       data: createPostDto,
     })

@@ -3,7 +3,7 @@ import { AuthService } from './auth.service'
 import { ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger'
 import { AuthLoginVo, ProfileVo } from './auth.vo'
 import { LoginUserDto } from '../users/user.dto'
-import { User } from '@/common/decorator/user.decorator'
+import { ReqUser } from '@/common/decorator/user.decorator'
 import { Public } from '@/common/decorator/public.decorator'
 
 @ApiTags('auth')
@@ -21,7 +21,7 @@ export class AuthController {
 
   @ApiOkResponse({ type: ProfileVo, description: '根据token获取当前用户信息' })
   @Get('profile')
-  getProfile(@User('id') id: number): Promise<ProfileVo> {
+  getProfile(@ReqUser('id') id: number): Promise<ProfileVo> {
     return this.authService.profile(id)
   }
 }

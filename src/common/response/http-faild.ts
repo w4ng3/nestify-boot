@@ -1,5 +1,14 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from '@nestjs/common'
+import { getReqMainInfo } from '@/utils/getReqMainInfo'
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpException,
+  Inject,
+  LoggerService,
+} from '@nestjs/common'
 import { FastifyRequest, FastifyReply } from 'fastify'
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston'
 
 /**
  * @class HttpFaild
@@ -9,6 +18,8 @@ import { FastifyRequest, FastifyReply } from 'fastify'
 @Catch(HttpException)
 // 接口异常拦截器
 export class HttpFaild implements ExceptionFilter {
+  constructor(@Inject(WINSTON_MODULE_NEST_PROVIDER) private readonly logger: LoggerService) {}
+
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp()
     const request = ctx.getRequest<FastifyRequest>()
@@ -29,6 +40,9 @@ export class HttpFaild implements ExceptionFilter {
       // 从 object 中取出 statusCode,如果没有则使用 HttpException 的默认状态码
       // status = resp['statusCode'] || status
     }
+    // exception.stack 为错误堆栈信息，但是内容太多，这里只打印错误信息和请求信息
+    // this.logger.error(msg, exception.stack, 'HttpFaild')
+    this.logger.error(msg, getReqMainInfo(request), 'HttpFaild')
 
     const data: THttpErrorResponse = {
       code: status,
@@ -38,10 +52,6 @@ export class HttpFaild implements ExceptionFilter {
       success: false,
     }
 
-    // 对默认的 404 进行特殊处理
-    // if (status === HttpStatus.NOT_FOUND) {
-    //   data.msg = `接口 ${request.method} -> ${request.url} 无效`;
-    // }
     void response.code(status).send(data)
   }
 }

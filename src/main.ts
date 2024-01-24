@@ -7,18 +7,25 @@ import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe'
 import { SuccessResponse } from './common/response/success-response'
 import { HttpFaild } from './common/response/http-faild'
 import { SwaggerModule, DocumentBuilder, SwaggerDocumentOptions } from '@nestjs/swagger'
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston'
+import { LoggerService } from '@nestjs/common/services/logger.service'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    // logger: true 会在控制台打印出请求的信息
     // 更多日志配置参考： https://www.fastify.cn/docs/latest/Logging/
     new FastifyAdapter({
-      logger: process.env.NODE_ENV === 'development' ? false : false,
+      logger: false,
       ignoreTrailingSlash: true,
+      // prefix: '/api', // 设置全局前缀
     }),
   )
+  // 使用 class-validator 验证器,
+  // 在应用级别绑定 ValidationPipe 开始，从而确保所有端点都受到保护，不会接收到不正确的数据
   useContainer(app.select(AppModule), { fallbackOnErrors: true })
+  // 使用 nest-winston 打印日志
+  const nestWinston: LoggerService = app.get(WINSTON_MODULE_NEST_PROVIDER)
+  app.useLogger(nestWinston)
   // 全局管道,在应用级别绑定 ValidationPipe 开始，从而确保所有端点都受到保护，不会接收到不正确的数据
   app.useGlobalPipes(
     new ValidationPipe({
@@ -36,18 +43,18 @@ async function bootstrap() {
    * preHandler 钩子: 这个钩子在请求处理流程中较晚被触发，此时请求体已经被解析。
    * 更多钩子参考： https://www.fastify.cn/docs/latest/Hooks/
    */
-  app
-    .getHttpAdapter()
-    .getInstance()
-    .addHook('preHandler', async (request, reply) => {
-      console.log(`Incoming request for:${request.method} - ${request.url}`)
-      if (request.body) console.log('Request body:', request.body)
-    })
+  // app
+  //   .getHttpAdapter()
+  //   .getInstance()
+  //   .addHook('preHandler', async (request, reply) => {
+  //     nestWinston.log(`Incoming request for:${request.method} - ${request.url}`)
+  //     if (request.body) console.log('Request body:', request.body)
+  //   })
 
   // 将 SuccessResponse 拦截器注册为全局拦截器
-  app.useGlobalInterceptors(new SuccessResponse())
+  app.useGlobalInterceptors(new SuccessResponse(nestWinston))
   // 捕捉全局错误
-  app.useGlobalFilters(new HttpFaild())
+  app.useGlobalFilters(new HttpFaild(nestWinston))
 
   // swagger api 文档，仅在开发环境下开启
   if (process.env.NODE_ENV === 'development') {
