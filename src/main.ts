@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NestFactory } from '@nestjs/core'
-import { AppModule } from './app.module'
+import { AppModule } from './modules/app/app.module'
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify'
 import { useContainer } from 'class-validator'
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe'

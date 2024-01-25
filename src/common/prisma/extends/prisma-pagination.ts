@@ -1,4 +1,4 @@
-import { PaginatedDto } from '@/common/response/dto/paginate.dto'
+import { PaginatedVo } from '@/common/model/paginate'
 import { Prisma } from '@prisma/client'
 
 type PaginationOptions = {
@@ -43,7 +43,7 @@ export default Prisma.defineExtension({
           (this as any).count({ where: operationArgs?.where }),
         ])
 
-        const results: PaginatedDto<any> = {
+        const results: PaginatedVo<any> = {
           page,
           pageSize,
           pageCount: Math.ceil(total / pageSize),

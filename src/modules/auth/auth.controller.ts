@@ -2,7 +2,7 @@ import { Body, Controller, Post, Get } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger'
 import { AuthLoginVo, ProfileVo } from './auth.vo'
-import { LoginUserDto } from '../users/user.dto'
+import { CreateUserDto, LoginUserDto } from '../users/user.dto'
 import { ReqUser } from '@/common/decorator/user.decorator'
 import { Public } from '@/common/decorator/public.decorator'
 
@@ -11,6 +11,12 @@ import { Public } from '@/common/decorator/public.decorator'
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+
+  @Public()
+  @Post('register')
+  register(@Body() createUserDto: CreateUserDto) {
+    return this.authService.register(createUserDto)
+  }
 
   @ApiOkResponse({ type: AuthLoginVo })
   @Public()

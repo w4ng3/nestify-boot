@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { CreatePostDto, UpdatePostDto } from './post.dto'
+import { CreatePostDto, PagePostDto, UpdatePostDto } from './post.dto'
 import { PrismaService } from '@/common/prisma/prisma.service'
 import { Post, Prisma } from '@prisma/client'
 @Injectable()
@@ -17,11 +17,18 @@ export class PostsService {
     return this.prisma.post.findMany()
   }
 
-  page() {
+  findPage(dto: PagePostDto) {
     return this.prisma.x.post.paginate({
       // 按更新时间倒序
       orderBy: { updatedAt: 'desc' },
-      pagination: { page: 1, pageSize: 10 },
+      pagination: { page: dto.page, pageSize: dto.pageSize },
+      where: {
+        // 模糊搜索标题和内容
+        OR: [
+          { title: { contains: dto.searchStr ?? '' } },
+          { content: { contains: dto.searchStr ?? '' } },
+        ],
+      },
     })
   }
 

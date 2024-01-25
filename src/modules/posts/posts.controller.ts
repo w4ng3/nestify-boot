@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common'
 import { PostsService } from './posts.service'
-import { CreatePostDto, UpdatePostDto } from './post.dto'
+import { CreatePostDto, PagePostDto, UpdatePostDto } from './post.dto'
 import { Post as PostModel } from '@prisma/client'
 import { UseInterceptors } from '@nestjs/common'
 import { CacheInterceptor } from '@nestjs/cache-manager'
@@ -17,37 +17,43 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @ApiOkResponse({ type: PostVo })
-  @ApiOperation({ summary: '创建文章' })
+  @ApiOperation({ summary: '创建帖子' })
   @Post()
   create(@Body() createPostDto: CreatePostDto) {
     return this.postsService.create(createPostDto)
   }
 
   @ApiOkResponse({ type: [PostVo] })
+  @ApiOperation({ summary: '查询全部' })
   @Public()
   @Get('list')
   findAll() {
-    // 调试可以看到，第一次查询数据库，5秒内第二次查询会从缓存中获取
-    // 更多缓存内容查看文档：https://nest.nodejs.cn/techniques/caching
     return this.postsService.findAll()
   }
 
   @ApiPaginatedResponse(PostVo)
-  @Get('page')
-  page() {
-    return this.postsService.page()
+  @ApiOperation({ summary: '分页查询' })
+  @Post('page')
+  findPage(@Body() dto: PagePostDto) {
+    return this.postsService.findPage(dto)
   }
 
+  @ApiOkResponse({ type: PostVo })
+  @ApiOperation({ summary: '根据id查询帖子' })
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.postsService.findOne(+id)
   }
 
+  @ApiOkResponse({ description: '更新成功' })
+  @ApiOperation({ summary: '更新帖子' })
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return this.postsService.update(+id, updatePostDto)
   }
 
+  @ApiOkResponse()
+  @ApiOperation({ summary: '删除帖子' })
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.postsService.remove(+id)
@@ -59,6 +65,8 @@ export class PostsController {
    * 获取请求对象信息，查看nest文档：https://nest.nodejs.cn/controllers#请求对象
    * 查询过滤运算符的prisma文档：https://prisma.nodejs.cn/reference/api-reference/prisma-client-reference#过滤条件和运算符
    */
+  @ApiOkResponse({ type: [PostVo] })
+  @ApiOperation({ summary: '模糊查询' })
   @Get('filter')
   async getFilteredPosts(@Query('searchStr') searchStr: string): Promise<PostModel[]> {
     return this.postsService.posts({

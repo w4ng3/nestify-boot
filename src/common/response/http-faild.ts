@@ -1,4 +1,4 @@
-import { getReqMainInfo } from '@/utils/getReqMainInfo'
+import { getReqMainInfo } from '@/utils/helpers'
 import {
   ArgumentsHost,
   Catch,

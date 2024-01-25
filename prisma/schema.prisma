@@ -15,7 +15,7 @@ model User {
   id       Int     @id @default(autoincrement())
   email    String  @unique
   name     String?
-  password String  @default("123456")
+  password String  @default("$2b$10$z./m5a/5bcgDORQUatHXIuGU/Jze8XixIQ2wiIwuVyXtER68Nnm2e")
   role     String? @default("USER")
   posts    Post[]
 }

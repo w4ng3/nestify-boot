@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common'
+import { Controller, Get, Body, Patch, Param, Delete } from '@nestjs/common'
 import { UsersService } from './users.service'
-import { CreateUserDto, FindOneParams, UpdateUserDto } from './user.dto'
+import { CreateUserDto, UpdateUserDto } from './user.dto'
 import { ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger'
+import { FindOneParams } from '@/common/model/params'
 
 @ApiTags('users')
 @ApiBearerAuth()
@@ -9,11 +10,7 @@ import { ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger'
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto)
-  }
-
+  @ApiOkResponse({ description: '获取用户列表', type: CreateUserDto, isArray: true })
   @Get()
   findAll() {
     return this.usersService.findAll()

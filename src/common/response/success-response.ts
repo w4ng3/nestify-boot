@@ -9,7 +9,7 @@ import {
 import { Observable, map } from 'rxjs'
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston'
 import { FastifyRequest } from 'fastify/types/request'
-import { getReqMainInfo } from '@/utils/getReqMainInfo'
+import { getReqMainInfo } from '@/utils/helpers'
 
 /**
  * @classdesc 为成功的Http响应数据统一添加 code、msg、success 字段
