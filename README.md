@@ -43,8 +43,8 @@ $ pnpm run test:cov
 
 - 首次运行 `npx prisma migrate dev --name "init"` 将运行迁移脚本以在数据库中创建实体表。
 - 运行 `npx prisma db seed` 命令来运行 prisma/seed.ts 文件，在数据库里生成初始数据。
-- 将来，你需要在每次更改 Prisma 模型后运行 `prisma generate` 命令以更新生成的 Prisma 客户端(即更新TS类型)。
-- 如果要同步数据库，那么使用`prisma db pull`或者`prisma db push`进行推送或拉取更新（如果在model里新增了非空字段且无默认值，那么push时会警告⚠️，需要使用`--force-reset`忽略所有警告）
+- 将来，你需要在每次更改 Prisma 模型后运行 `npx prisma generate` 命令以更新生成的 Prisma 客户端(即更新TS类型)。
+- 如果要同步数据库，那么使用`npx prisma db pull`或者`npx prisma db push`进行推送或拉取更新（如果在model里新增了非空字段且无默认值，那么push时会警告⚠️，需要使用`--force-reset`忽略所有警告）
 - push 和 pull 不会生成记录，如果要在`prisma/migrations`里生成记录，需要运行`migrate dev`命令
 
 ### Prisma文档生成器

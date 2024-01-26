@@ -15,7 +15,7 @@ model User {
   id       Int     @id @default(autoincrement())
   email    String  @unique
   name     String?
-  password String  @default("$2b$10$z./m5a/5bcgDORQUatHXIuGU/Jze8XixIQ2wiIwuVyXtER68Nnm2e")
+  password String?
   role     String? @default("USER")
   posts    Post[]
 }
@@ -26,11 +26,12 @@ model Post {
   content   String?
   published Boolean? @default(false)
   authorId  Int?
+  deleted   Boolean? @default(false) // 软删除
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   author    User?    @relation(fields: [authorId], references: [id])
 
-  // 这行代码的意思是在数据库的Post表中为authorId字段创建一个名为Post_authorId_fkey的索引。
+  // 这行代码的意思是在数据库的 Post 表中为 authorId 字段创建一个名为Post_authorId_fkey的索引。
   // 索引可以提高数据库查询的速度。
   @@index([authorId], map: "Post_authorId_fkey")
 }

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { ArrayNotEmpty, IsNumberString, IsArray } from 'class-validator'
+import { ArrayNotEmpty, IsNumberString } from 'class-validator'
 
 /**
  * 查询单个参数，用于 class-validator 校验
@@ -11,11 +11,10 @@ export class FindOneParams {
 }
 
 /**
- * 批量删除，接收id数组
+ * 批量操作，接收id数组
  */
-export class DeleteManyDto {
-  @ApiProperty({ description: 'id数组', example: [1, 2, 3] })
-  @IsArray({ message: 'id必须为数组类型' })
+export class FindManyParams {
+  @ApiProperty({ description: 'id数组', type: [Number], example: [1, 2, 3] })
   @ArrayNotEmpty({ message: 'id数组不能为空' })
   ids: number[]
 }

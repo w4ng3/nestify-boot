@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  NotFoundException,
+} from '@nestjs/common'
 import { PostsService } from './posts.service'
 import { CreatePostDto, PagePostDto, UpdatePostDto } from './post.dto'
 import { Post as PostModel } from '@prisma/client'
@@ -8,6 +18,8 @@ import { ApiTags, ApiOkResponse, ApiOperation, ApiBearerAuth } from '@nestjs/swa
 import { ApiPaginatedResponse } from '@/common/decorator/paginated.decorator'
 import { PostVo } from './post.vo'
 import { Public } from '@/common/decorator/public.decorator'
+import { FindManyParams } from '@/common/model/params'
+import { QueryMode } from '@/config/enum.config'
 
 @ApiTags('posts')
 @ApiBearerAuth()
@@ -28,14 +40,21 @@ export class PostsController {
   @Public()
   @Get('list')
   findAll() {
-    return this.postsService.findAll()
+    return this.postsService.findAll(QueryMode.ALL)
   }
 
   @ApiPaginatedResponse(PostVo)
   @ApiOperation({ summary: '分页查询' })
   @Post('page')
   findPage(@Body() dto: PagePostDto) {
-    return this.postsService.findPage(dto)
+    return this.postsService.findPage(dto, QueryMode.VALID)
+  }
+
+  @ApiPaginatedResponse(PostVo)
+  @ApiOperation({ summary: '分页查询已删除的帖子' })
+  @Post('deleted/page')
+  findPageOfDeleted(@Body() dto: PagePostDto) {
+    return this.postsService.findPage(dto, QueryMode.DEL)
   }
 
   @ApiOkResponse({ type: PostVo })
@@ -53,10 +72,34 @@ export class PostsController {
   }
 
   @ApiOkResponse()
+  @ApiOperation({ summary: '批量恢复被删除的帖子' })
+  @Patch('restore')
+  restore(@Body() dto: FindManyParams) {
+    return this.postsService.restore(dto.ids)
+  }
+
+  @ApiOkResponse()
   @ApiOperation({ summary: '删除帖子' })
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.postsService.remove(+id)
+  async remove(@Param('id') id: string) {
+    try {
+      await this.postsService.remove(+id)
+      return `帖子-${id} 删除成功`
+    } catch (error) {
+      throw new NotFoundException('删除失败,该帖子不存在')
+    }
+  }
+
+  @ApiOkResponse()
+  @ApiOperation({ summary: '批量删除帖子' })
+  @Delete('batch')
+  async batchRemove(@Body() dto: FindManyParams) {
+    try {
+      await this.postsService.batchRemove(dto.ids)
+      return '帖子删除成功'
+    } catch (error) {
+      throw new NotFoundException('删除失败,请重试')
+    }
   }
 
   /**

@@ -19,7 +19,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prisma:doc": "prisma generate docs prisma/docs"
+    "prisma:doc": "prisma generate docs prisma/docs",
+    "prisma:push": "prisma generate && prisma db push"
   },
   "dependencies": {
     "@fastify/static": "^6.12.0",
