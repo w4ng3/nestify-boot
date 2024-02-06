@@ -24,3 +24,13 @@ export enum QueryMode {
   /** 只包含有效数据（deleted===0） */
   VALID = 'valid',
 }
+
+/**
+ * @description 定义排序枚举
+ */
+export enum OrderType {
+  /** @description: 按条件升序 */
+  ASC = 'asc',
+  /** @description: 按条件倒序 */
+  DESC = 'desc',
+}

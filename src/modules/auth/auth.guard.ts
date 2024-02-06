@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
 import { FastifyRequest } from 'fastify'
 import { Reflector } from '@nestjs/core'
-import { IS_PUBLIC_KEY } from '@/common/decorator/public.decorator'
+import { ALLOW_GUEST } from '@/config'
 
 /**
  * @description 用于验证用户是否登录的守卫
@@ -24,14 +24,22 @@ export class AuthGuard implements CanActivate {
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
-      context.getHandler(),
-      context.getClass(),
+    // 获取 @SetMetadata() 装饰器设置的元数据
+    const defaultGuest = this.reflector.getAllAndOverride<boolean>(ALLOW_GUEST, [
+      context.getHandler(), // 💡 context.getHandler() 返回当前路由处理程序的引用
+      context.getClass(), // 💡 context.getClass() 返回当前路由处理程序的类引用
     ])
-    if (isPublic) {
-      // 💡 See this condition
-      return true
-    }
+
+    // 获取 Reflect.defineMetadata 设置的元数据
+    const crudGuest = Reflect.getMetadata(
+      ALLOW_GUEST,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      context.getClass().prototype,
+      context.getHandler().name,
+    )
+    // 💡 如果当前请求允许游客访问，则直接返回 true
+    const allowGuest = defaultGuest || crudGuest
+    if (allowGuest) return true
 
     const request = context.switchToHttp().getRequest<FastifyRequest>()
     const token = this.extractTokenFromHeader(request)

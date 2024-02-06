@@ -1,14 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Query,
-  NotFoundException,
-} from '@nestjs/common'
+import { Controller, Get, Post, Body, Query } from '@nestjs/common'
 import { PostsService } from './posts.service'
 import { CreatePostDto, PagePostDto, UpdatePostDto } from './post.dto'
 import { Post as PostModel } from '@prisma/client'
@@ -17,89 +7,70 @@ import { CacheInterceptor } from '@nestjs/cache-manager'
 import { ApiTags, ApiOkResponse, ApiOperation, ApiBearerAuth } from '@nestjs/swagger'
 import { ApiPaginatedResponse } from '@/common/decorator/paginated.decorator'
 import { PostVo } from './post.vo'
-import { Public } from '@/common/decorator/public.decorator'
-import { FindManyParams } from '@/common/model/params'
 import { QueryMode } from '@/config/enum.config'
+import { CrudController } from '../core/crud/crud.controller'
+import { Crud } from '../core/crud/crud.decorator'
 
+@Crud({
+  id: 'post',
+  enabled: [
+    'create',
+    'findAll',
+    { name: 'findOne', option: { allowGuest: true } },
+    'findPage',
+    'update',
+    'delete',
+    'restore',
+  ],
+  dtos: {
+    create: CreatePostDto,
+    update: UpdatePostDto,
+    query: UpdatePostDto,
+  },
+})
 @ApiTags('posts')
 @ApiBearerAuth()
 @Controller('posts')
 @UseInterceptors(CacheInterceptor) // 使用缓存拦截器, 仅对get请求有效
-export class PostsController {
-  constructor(private readonly postsService: PostsService) {}
-
-  @ApiOkResponse({ type: PostVo })
-  @ApiOperation({ summary: '创建帖子' })
-  @Post()
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.create(createPostDto)
+export class PostsController extends CrudController {
+  constructor(private readonly postsService: PostsService) {
+    super(postsService)
   }
 
-  @ApiOkResponse({ type: [PostVo] })
-  @ApiOperation({ summary: '查询全部' })
-  @Public()
-  @Get('list')
-  findAll() {
-    return this.postsService.findAll(QueryMode.ALL)
-  }
+  // @ApiOkResponse({ type: PostVo })
+  // @ApiOperation({ summary: '创建帖子' })
+  // @Post()
+  // create(@Body() createPostDto: CreatePostDto) {
+  //   return this.postsService.create(createPostDto)
+  // }
 
-  @ApiPaginatedResponse(PostVo)
-  @ApiOperation({ summary: '分页查询' })
-  @Post('page')
-  findPage(@Body() dto: PagePostDto) {
-    return this.postsService.findPage(dto, QueryMode.VALID)
-  }
+  // @ApiOkResponse({ type: [PostVo] })
+  // @ApiOperation({ summary: '查询全部' })
+  // @Guest()
+  // @Get('list')
+  // findAll() {
+  //   return this.postsService.findAll(QueryMode.ALL)
+  // }
+
+  // @ApiPaginatedResponse(PostVo)
+  // @ApiOperation({ summary: '分页查询' })
+  // @Post('page')
+  // findPage(@Body() dto: PagePostDto) {
+  //   return this.postsService.findPage(dto, QueryMode.VALID)
+  // }
+
+  // @ApiOkResponse({ type: PostVo })
+  // @ApiOperation({ summary: '根据id查询帖子' })
+  // @Get(':id')
+  // findOne(@Param('id') id: number) {
+  //   return this.postsService.findOne(+id)
+  // }
 
   @ApiPaginatedResponse(PostVo)
   @ApiOperation({ summary: '分页查询已删除的帖子' })
   @Post('deleted/page')
   findPageOfDeleted(@Body() dto: PagePostDto) {
     return this.postsService.findPage(dto, QueryMode.DEL)
-  }
-
-  @ApiOkResponse({ type: PostVo })
-  @ApiOperation({ summary: '根据id查询帖子' })
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.postsService.findOne(+id)
-  }
-
-  @ApiOkResponse({ description: '更新成功' })
-  @ApiOperation({ summary: '更新帖子' })
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postsService.update(+id, updatePostDto)
-  }
-
-  @ApiOkResponse()
-  @ApiOperation({ summary: '批量恢复被删除的帖子' })
-  @Patch('restore')
-  restore(@Body() dto: FindManyParams) {
-    return this.postsService.restore(dto.ids)
-  }
-
-  @ApiOkResponse()
-  @ApiOperation({ summary: '删除帖子' })
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
-    try {
-      await this.postsService.remove(+id)
-      return `帖子-${id} 删除成功`
-    } catch (error) {
-      throw new NotFoundException('删除失败,该帖子不存在')
-    }
-  }
-
-  @ApiOkResponse()
-  @ApiOperation({ summary: '批量删除帖子' })
-  @Delete('batch')
-  async batchRemove(@Body() dto: FindManyParams) {
-    try {
-      await this.postsService.batchRemove(dto.ids)
-      return '帖子删除成功'
-    } catch (error) {
-      throw new NotFoundException('删除失败,请重试')
-    }
   }
 
   /**

@@ -131,7 +131,7 @@ SwaggerModule 在路由处理程序中搜索所有 @Body()、@Query() 和 @Param
 
 ## [JWT 身份验证](https://nest.nodejs.cn/security/authentication#jwt-%E4%BB%A4%E7%89%8C)
 
-在`class AuthGuard`中定义了全局守卫，如果要放开某些接口，使用自定义装饰器`@Public()`即可，参考`auth/login`接口。
+在`class AuthGuard`中定义了全局守卫，如果要放开某些接口，使用自定义装饰器`@Guest()`即可，参考`auth/login`接口。
 
 自定义参数装饰器，用于获取token解析后的用户信息，用法如下：
 

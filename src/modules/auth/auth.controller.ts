@@ -4,7 +4,7 @@ import { ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger'
 import { AuthLoginVo, ProfileVo } from './auth.vo'
 import { CreateUserDto, LoginUserDto } from '../users/user.dto'
 import { ReqUser } from '@/common/decorator/user.decorator'
-import { Public } from '@/common/decorator/public.decorator'
+import { Guest } from '@/common/decorator/guest.decorator'
 
 @ApiTags('auth')
 @ApiBearerAuth()
@@ -12,14 +12,14 @@ import { Public } from '@/common/decorator/public.decorator'
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Public()
+  @Guest()
   @Post('register')
   register(@Body() createUserDto: CreateUserDto) {
     return this.authService.register(createUserDto)
   }
 
   @ApiOkResponse({ type: AuthLoginVo })
-  @Public()
+  @Guest()
   @Post('login')
   login(@Body() loginUserDto: LoginUserDto) {
     return this.authService.login(loginUserDto)

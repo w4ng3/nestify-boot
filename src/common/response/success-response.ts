@@ -18,6 +18,10 @@ import { getReqMainInfo } from '@/utils/helpers'
 export class SuccessResponse<T> implements NestInterceptor {
   constructor(@Inject(WINSTON_MODULE_NEST_PROVIDER) private readonly logger: LoggerService) {}
 
+  /**
+   * 了解执行上下文 ExecutionContext
+   * https://nest.nodejs.cn/fundamentals/execution-context
+   */
   intercept(context: ExecutionContext, next: CallHandler): Observable<THttpSuccessResponse<T>> {
     const req = context.switchToHttp().getRequest<FastifyRequest>()
 
