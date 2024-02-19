@@ -29,4 +29,6 @@ export class BaseVo {
   createdAt: Date
   @ApiProperty({ description: '更新时间', example: '2024-01-20T06:26:38.000Z' })
   updatedAt: Date
+  // @ApiProperty({ description: '是否已删除', example: false })
+  // deleted: boolean
 }

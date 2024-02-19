@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt'
 import { UsersService } from '../users/users.service'
 import { CreateUserDto, LoginUserDto } from '@/modules/users/user.dto'
 import { AuthLoginVo, ProfileVo } from './auth.vo'
-import { UserJwtType } from '@/common/decorator/user.decorator'
+import { UserJwtType } from '@/common/decorator/param.decorator'
 import { decrypt, encrypt } from '@/utils/helpers'
 import { PrismaService } from '@/common/prisma/prisma.service'
 

@@ -1,6 +1,8 @@
+import { CRUD_INCLUDE } from '@/config'
 import { CreateUserDto } from '@/modules/users/user.dto'
 import { createParamDecorator, ExecutionContext } from '@nestjs/common'
 import { PickType } from '@nestjs/swagger'
+import { FastifyRequest } from 'fastify/types/request'
 
 export class UserJwtType extends PickType(CreateUserDto, ['email'] as const) {
   /** 用户id */
@@ -12,7 +14,19 @@ export class UserJwtType extends PickType(CreateUserDto, ['email'] as const) {
  * @example @ReqUser('id') id: number
  */
 export const ReqUser = createParamDecorator((data: string, ctx: ExecutionContext): unknown => {
-  const request = ctx.switchToHttp().getRequest()
-  const user: UserJwtType = request.user
+  const request = ctx.switchToHttp().getRequest<FastifyRequest>()
+  const user: UserJwtType = request['user']
   return data ? user?.[data] : user
+})
+
+/**
+ * @description 获取 CRUD 装饰器中设置的include参数，用于关联查询
+ * 获取 Reflect.defineMetadata 设置的元数据
+ */
+export const CrudInclude = createParamDecorator((data: string, ctx: ExecutionContext): unknown => {
+  return Reflect.getMetadata(
+    CRUD_INCLUDE,
+    ctx.getClass().prototype as object,
+    ctx.getHandler().name,
+  )
 })

@@ -3,7 +3,7 @@ import { AuthService } from './auth.service'
 import { ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger'
 import { AuthLoginVo, ProfileVo } from './auth.vo'
 import { CreateUserDto, LoginUserDto } from '../users/user.dto'
-import { ReqUser } from '@/common/decorator/user.decorator'
+import { ReqUser } from '@/common/decorator/param.decorator'
 import { Guest } from '@/common/decorator/guest.decorator'
 
 @ApiTags('auth')

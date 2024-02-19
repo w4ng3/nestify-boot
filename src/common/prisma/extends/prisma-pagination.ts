@@ -1,12 +1,6 @@
-import { PaginatedVo } from '@/common/model/paginate'
+import { PaginatedVo, PaginationOptions } from '@/common/model/paginate'
 import { Prisma } from '@prisma/client'
 
-type PaginationOptions = {
-  /** 当前页码 */
-  page?: number
-  /** 每页条数 */
-  pageSize?: number
-}
 /**
  * @description: 为PrismaClient添加分页功能
  * 代码参考自 github.com/mohammadhosseinmoradi/prisma-pagination-extension
@@ -61,4 +55,4 @@ export default Prisma.defineExtension({
 // 3. 接下来，我们定义 paginate 方法，该方法接收一个 Prisma 模型作为参数。
 // 4. 然后，我们使用 Prisma.Result<T, A, 'findMany'> 为 paginate 方法定义返回类型。
 // 5. 最后，我们返回一个JS对象，其中包含查询结果和分页元数据。
-// 6. 最后，我们导出 Prisma 扩展。
+// 6. 最后，导出 Prisma 扩展。

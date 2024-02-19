@@ -27,11 +27,11 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
 
   // tips: onModuleInit 是可选的 — 如果你将其遗漏，Prisma 将在第一次调用数据库时延迟连接。
   async onModuleInit() {
-    console.log('初始化与数据库的连接:>> ', new Date())
+    // console.log('初始化与数据库的连接:>> ', new Date())
     await this.$connect()
   }
   async onModuleDestroy() {
-    console.log('关闭与数据库的连接', new Date())
+    // console.log('关闭与数据库的连接', new Date())
     await this.$disconnect()
   }
 }

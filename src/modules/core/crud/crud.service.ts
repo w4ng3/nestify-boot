@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { PaginatedVo, paginatedDto } from '@/common/model/paginate'
+import { PaginatedVo } from '@/common/model/paginate'
 import { PrismaService } from '@/common/prisma/prisma.service'
 import { OrderType, QueryMode } from '@/config/enum.config'
 import { Prisma } from '@prisma/client'
@@ -25,51 +25,58 @@ export abstract class CrudService {
   /**
    * @description: 查询单个
    * @param {number} id id
+   * @param include 嵌套读取参数(关联查询)
    */
-  findOne(id: number): Promise<any> {
+  findOne(id: number, include?: any): Promise<any> {
     // findUnique({where: { id }}); 获取单个文章
     // findUnique({where: { id }}).author(); 获取单个文章的作者信息
     // 详情文档： https://prisma.nodejs.cn/concepts/components/prisma-client/relation-queries#流畅的-api
     // tips: 不能在同一级别上使用include和select
-    return this.prisma[this.model].findUnique({
-      where: { id },
-      // include: {
-      //   author: {
-      //     select: { name: true, email: true },
-      //   },
-      // },
-    })
+    return this.prisma[this.model].findUnique({ where: { id }, include })
   }
 
   /**
    * @description: 查询全部
+   * @param include 嵌套读取参数(关联查询)
    * @param {QueryMode} mode 查询模式, 默认只包含未软删除的数据
    */
-  findAll(mode: QueryMode = QueryMode.VALID): Promise<any[]> {
+  findAll(include?: any, mode: QueryMode = QueryMode.VALID): Promise<any[]> {
     return this.prisma[this.model].findMany({
       orderBy: { updatedAt: OrderType.DESC },
       where: { deleted: mode === QueryMode.ALL ? undefined : mode === QueryMode.DEL },
+      include,
     })
   }
 
   /**
    * @description: 分页查询
-   * @param {paginatedDto} dto 分页参数
+   * @param dto 分页查询参数
+   * @param include 嵌套读取参数(关联查询)
    * @param {QueryMode} mode 查询模式, 默认只包含未软删除的数据
    */
-  findPage(dto: paginatedDto, mode: QueryMode = QueryMode.VALID): Promise<PaginatedVo<any>> {
+  findPage(dto: any, include?: any, mode: QueryMode = QueryMode.VALID): Promise<PaginatedVo<any>> {
+    const filterOptiton = []
+    for (const key in dto) {
+      // 这里将dto的属性拼接成where条件，但排除掉page和pageSize字段
+      if (key !== 'page' && key !== 'pageSize') {
+        if (typeof dto[key] === 'string') {
+          filterOptiton.push({ [key]: { contains: dto[key] ?? '' } })
+        } else {
+          filterOptiton.push({ [key]: dto[key] })
+        }
+      }
+    }
+
     return this.prisma.x[this.model].paginate({
       // 按更新时间倒序
       orderBy: { updatedAt: OrderType.DESC },
       pagination: { page: dto.page, pageSize: dto.pageSize },
       where: {
         deleted: mode === QueryMode.ALL ? undefined : mode === QueryMode.DEL,
-        // 模糊搜索标题和内容
-        // OR: [
-        //   { title: { contains: dto.searchStr ?? '' } },
-        //   { content: { contains: dto.searchStr ?? '' } },
-        // ],
+        // 过滤条件
+        AND: filterOptiton,
       },
+      include,
     })
   }
 

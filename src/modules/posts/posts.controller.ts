@@ -1,32 +1,31 @@
-import { Controller, Get, Post, Body, Query } from '@nestjs/common'
+import { Controller, Get, Query } from '@nestjs/common'
 import { PostsService } from './posts.service'
-import { CreatePostDto, PagePostDto, UpdatePostDto } from './post.dto'
+import { CreatePostDto, PageQueryDto, UpdatePostDto } from './post.dto'
 import { Post as PostModel } from '@prisma/client'
 import { UseInterceptors } from '@nestjs/common'
 import { CacheInterceptor } from '@nestjs/cache-manager'
 import { ApiTags, ApiOkResponse, ApiOperation, ApiBearerAuth } from '@nestjs/swagger'
-import { ApiPaginatedResponse } from '@/common/decorator/paginated.decorator'
 import { PostVo } from './post.vo'
-import { QueryMode } from '@/config/enum.config'
-import { CrudController } from '../core/crud/crud.controller'
-import { Crud } from '../core/crud/crud.decorator'
+import { CrudController } from '@/modules/core/crud/crud.controller'
+import { Crud } from '@/modules/core/crud/crud.decorator'
 
 @Crud({
-  id: 'post',
   enabled: [
     'create',
-    'findAll',
-    { name: 'findOne', option: { allowGuest: true } },
+    'findOne',
+    { name: 'findAll', option: { allowGuest: true } },
     'findPage',
     'update',
     'delete',
     'restore',
+    'findPageOfDeleted',
   ],
   dtos: {
     create: CreatePostDto,
     update: UpdatePostDto,
-    query: UpdatePostDto,
+    query: PageQueryDto,
   },
+  queryInclude: { author: { select: { id: false, name: true, email: true } } },
 })
 @ApiTags('posts')
 @ApiBearerAuth()
@@ -37,41 +36,12 @@ export class PostsController extends CrudController {
     super(postsService)
   }
 
-  // @ApiOkResponse({ type: PostVo })
-  // @ApiOperation({ summary: '创建帖子' })
-  // @Post()
-  // create(@Body() createPostDto: CreatePostDto) {
-  //   return this.postsService.create(createPostDto)
-  // }
-
-  // @ApiOkResponse({ type: [PostVo] })
-  // @ApiOperation({ summary: '查询全部' })
-  // @Guest()
-  // @Get('list')
-  // findAll() {
-  //   return this.postsService.findAll(QueryMode.ALL)
-  // }
-
   // @ApiPaginatedResponse(PostVo)
-  // @ApiOperation({ summary: '分页查询' })
-  // @Post('page')
-  // findPage(@Body() dto: PagePostDto) {
-  //   return this.postsService.findPage(dto, QueryMode.VALID)
+  // @ApiOperation({ summary: '分页查询已删除的帖子' })
+  // @Post('deleted/page')
+  // findPageOfDeleted(@Body() dto: PageQueryDto) {
+  //   return this.postsService.findPage(dto, {}, QueryMode.DEL)
   // }
-
-  // @ApiOkResponse({ type: PostVo })
-  // @ApiOperation({ summary: '根据id查询帖子' })
-  // @Get(':id')
-  // findOne(@Param('id') id: number) {
-  //   return this.postsService.findOne(+id)
-  // }
-
-  @ApiPaginatedResponse(PostVo)
-  @ApiOperation({ summary: '分页查询已删除的帖子' })
-  @Post('deleted/page')
-  findPageOfDeleted(@Body() dto: PagePostDto) {
-    return this.postsService.findPage(dto, QueryMode.DEL)
-  }
 
   /**
    * @description: 模糊查询文章列表

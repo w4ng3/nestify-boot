@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsString, IsOptional, IsNumber, IsBoolean } from 'class-validator'
-import { ApiProperty, PartialType } from '@nestjs/swagger'
+import { ApiProperty, IntersectionType, PartialType } from '@nestjs/swagger'
 import { paginatedDto } from '@/common/model/paginate'
 
 export class CreatePostDto {
@@ -27,10 +27,6 @@ export class UpdatePostDto extends PartialType(CreatePostDto) {}
 
 /**
  * @description: 分页查询文章列表
+ * @warning: 如果继承的属性中有字段被 IsNotEmpty装饰器修饰，那么要注意查询时不能传入空字符串
  */
-export class PagePostDto extends paginatedDto {
-  @IsOptional()
-  @IsString()
-  @ApiProperty({ description: '搜索字符串', example: '我在荒岛上迎接黎明', required: false })
-  searchStr?: string
-}
+export class PageQueryDto extends IntersectionType(paginatedDto, UpdatePostDto) {}

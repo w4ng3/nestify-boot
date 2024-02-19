@@ -15,17 +15,11 @@ export class PostsService extends CrudService {
    * 查询文章列表，支持排序、条件...查询
    */
   async posts(params: {
-    skip?: number
-    take?: number
-    cursor?: Prisma.PostWhereUniqueInput
     where?: Prisma.PostWhereInput
     orderBy?: Prisma.PostOrderByWithRelationInput
   }): Promise<Post[]> {
-    const { skip, take, cursor, where, orderBy } = params
+    const { where, orderBy } = params
     return this.prisma.post.findMany({
-      skip,
-      take,
-      cursor,
       where,
       orderBy,
     })

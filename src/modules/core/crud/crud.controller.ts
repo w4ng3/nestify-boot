@@ -1,20 +1,35 @@
-import { Get, Post, Body, Patch, Param, Delete, NotFoundException } from '@nestjs/common'
+import {
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  NotFoundException,
+  SerializeOptions,
+  ClassSerializerInterceptor,
+  UseInterceptors,
+} from '@nestjs/common'
 import { CrudService } from './crud.service'
-import { PaginatedVo, paginatedDto } from '@/common/model/paginate'
+import { PaginatedVo } from '@/common/model/paginate'
 import { ApiOperation, ApiOkResponse } from '@nestjs/swagger'
-import { FindManyParams } from '@/common/model/params'
+import { FindManyParams, FindOneParams } from '@/common/model/params'
+import { CrudInclude } from '@/common/decorator/param.decorator'
+import { QueryMode } from '@/config/enum.config'
 
 /**
  * @module core crud抽象 controller
+ * @description : UseInterceptors 和 SerializeOptions 处理返回结果的序列化
+ * 把相关前缀的字段排除在序列化之外，如 deleted，被继承后依然有效，且可以在handler中重写
  */
+@SerializeOptions({ excludePrefixes: ['deleted'] })
+@UseInterceptors(ClassSerializerInterceptor)
 export class CrudController {
   constructor(private readonly service: CrudService) {}
 
   /**
    * @description: 新增
    */
-  // @ApiOkResponse({ type: V })
-  // 泛型作为类型无法触发 class-validator 的校验，必须使用class类，所以这里的 T 无效
   @ApiOperation({ summary: '新增' })
   @Post()
   create(@Body() data: any) {
@@ -26,26 +41,29 @@ export class CrudController {
    */
   @ApiOperation({ summary: '根据ID查询' })
   @Get(':id')
-  findOne(@Param('id') id: number): Promise<any> {
-    return this.service.findOne(id)
+  findOne(@Param() params: FindOneParams, @CrudInclude() inc: any) {
+    console.log('include? :>> ', inc)
+    return this.service.findOne(+params.id, inc)
   }
 
   /**
    * @description: 查询全部
    */
+  // @SerializeOptions({ excludePrefixes: ['deleted', 'createdAt', 'updatedAt'] })
   @ApiOperation({ summary: '查询全部' })
   @Get('list')
-  findAll() {
-    return this.service.findAll()
+  findAll(@CrudInclude() inc: any) {
+    return this.service.findAll(inc)
   }
 
   /**
    * @description: 分页查询
    */
+  // @ApiPaginatedResponse(Vo)
   @ApiOperation({ summary: '分页查询' })
   @Post('page')
-  findPage(@Body() dto: paginatedDto): Promise<PaginatedVo<any>> {
-    return this.service.findPage(dto)
+  findPage(@Body() dto: any, @CrudInclude() inc: any): Promise<PaginatedVo<any>> {
+    return this.service.findPage(dto, inc)
   }
 
   /**
@@ -75,7 +93,19 @@ export class CrudController {
   }
 
   /**
+   * @description: 分页查询已软删除的帖子
+   * @param dto 分页查询参数
+   * @param include 嵌套读取参数(关联查询)
+   */
+  @ApiOperation({ summary: '分页查询已软删除的帖子' })
+  @Post('deleted/page')
+  findPageOfDeleted(@Body() dto: any, @CrudInclude() inc: any) {
+    return this.service.findPage(dto, inc, QueryMode.DEL)
+  }
+
+  /**
    * @description: 批量恢复
+   * @param {number[]} dto.ids id数组
    */
   @ApiOkResponse()
   @ApiOperation({ summary: '恢复' })

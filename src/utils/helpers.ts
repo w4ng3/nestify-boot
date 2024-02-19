@@ -34,6 +34,3 @@ export const encrypt = (password: string, salt: string | number) => {
 export const decrypt = (password: string, hashed: string) => {
   return bcrypt.compareSync(password, hashed)
 }
-
-const pass = encrypt('123456', 10)
-console.log(pass)
