@@ -1,11 +1,12 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { UsersService } from '../users/users.service'
-import { CreateUserDto, LoginUserDto } from '@/modules/users/user.dto'
+import { CreateUserDto, LoginUserDto, ResetPasswordDto } from '@/modules/users/user.dto'
 import { AuthLoginVo, ProfileVo } from './auth.vo'
 import { UserJwtType } from '@/common/decorator/param.decorator'
 import { decrypt, encrypt } from '@/utils/helpers'
 import { PrismaService } from '@/common/prisma/prisma.service'
+import { User as UserModel } from '@prisma/client'
 
 @Injectable()
 export class AuthService {
@@ -57,9 +58,40 @@ export class AuthService {
    * @description 获取用户信息,不包含密码和id
    */
   async profile(id: number): Promise<ProfileVo> {
-    const user = await this.userService.findOne(id)
-    delete user.password
-    delete user.id
-    return user
+    const user: UserModel = await this.userService.findOne(id)
+    const { email, name, role } = user
+    return { email, name, role }
+  }
+
+  /**
+   * 修改密码
+   * 内置-http-异常：https://nest.nodejs.cn/exception-filters#内置-http-异常
+   * 状态码规范: https://www.runoob.com/http/http-status-codes.html
+   */
+  async updatePassword(id: number, oldPassword: string, newPassword: string) {
+    const user: UserModel = await this.userService.findOne(id)
+    if (!decrypt(oldPassword, user.password)) {
+      throw new HttpException('原密码错误', HttpStatus.FORBIDDEN)
+    }
+    const password = encrypt(newPassword, 10)
+    await this.prisma.user.update({ where: { id }, data: { password } })
+    return '修改成功'
+  }
+
+  /**
+   * 重置密码
+   */
+  async resetPassword(dto: ResetPasswordDto) {
+    const user = await this.userService.findOneByEmail(dto.email)
+    if (!user) {
+      throw new UnauthorizedException({ message: '该邮箱未注册' })
+    } else if (dto.code !== '123456') {
+      throw new HttpException('验证码不正确', HttpStatus.BAD_REQUEST)
+    }
+    await this.prisma.user.update({
+      where: { email: dto.email },
+      data: { password: encrypt(dto.password, 10) },
+    })
+    return '重置成功'
   }
 }

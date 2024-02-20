@@ -29,4 +29,4 @@ export class UpdatePostDto extends PartialType(CreatePostDto) {}
  * @description: 分页查询文章列表
  * @warning: 如果继承的属性中有字段被 IsNotEmpty装饰器修饰，那么要注意查询时不能传入空字符串
  */
-export class PageQueryDto extends IntersectionType(paginatedDto, UpdatePostDto) {}
+export class PageQueryPostDto extends IntersectionType(paginatedDto, UpdatePostDto) {}

@@ -1,6 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common'
 import { PostsService } from './posts.service'
-import { CreatePostDto, PageQueryDto, UpdatePostDto } from './post.dto'
+import { CreatePostDto, PageQueryPostDto, UpdatePostDto } from './post.dto'
 import { Post as PostModel } from '@prisma/client'
 import { UseInterceptors } from '@nestjs/common'
 import { CacheInterceptor } from '@nestjs/cache-manager'
@@ -23,7 +23,7 @@ import { Crud } from '@/modules/core/crud/crud.decorator'
   dtos: {
     create: CreatePostDto,
     update: UpdatePostDto,
-    query: PageQueryDto,
+    query: PageQueryPostDto,
   },
   queryInclude: { author: { select: { id: false, name: true, email: true } } },
 })
@@ -35,13 +35,6 @@ export class PostsController extends CrudController {
   constructor(private readonly postsService: PostsService) {
     super(postsService)
   }
-
-  // @ApiPaginatedResponse(PostVo)
-  // @ApiOperation({ summary: '分页查询已删除的帖子' })
-  // @Post('deleted/page')
-  // findPageOfDeleted(@Body() dto: PageQueryDto) {
-  //   return this.postsService.findPage(dto, {}, QueryMode.DEL)
-  // }
 
   /**
    * @description: 模糊查询文章列表

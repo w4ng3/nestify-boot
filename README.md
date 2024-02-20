@@ -44,7 +44,7 @@ $ pnpm run test:cov
 - 首次运行 `npx prisma migrate dev --name "init"` 将运行迁移脚本以在数据库中创建实体表。
 - 运行 `npx prisma db seed` 命令来运行 prisma/seed.ts 文件，在数据库里生成初始数据。
 - 将来，你需要在每次更改 Prisma 模型后运行 `npx prisma generate` 命令以更新生成的 Prisma 客户端(即更新TS类型)。
-- 如果要同步数据库，那么使用`npx prisma db pull`或者`npx prisma db push`进行推送或拉取更新（如果在model里新增了非空字段且无默认值，那么push时会警告⚠️，需要使用`--force-reset`忽略所有警告）
+- 如果要同步数据库，那么使用`npx prisma db pull`或者`npx prisma db push`进行推送或拉取更新（如果在model里新增了非空字段且无默认值，那么push时会警告⚠️，需要使用`--force-reset`忽略所有警告，⚠️危险操作，会清空数据）
 - push 和 pull 不会生成记录，如果要在`prisma/migrations`里生成记录，需要运行`migrate dev`命令
 
 ### Prisma文档生成器
@@ -97,12 +97,6 @@ export class UsersController {
 
 更多方法可查看[github 仓库](https://github.com/node-cache-manager/node-cache-manager#readme)
 
-## 进阶
-
-- 序列化，全局序列化拦截器 https://3rcd.com/wiki/nestjs-practise/chapter5#序列化拦截器
-- 自动序列化 https://3rcd.com/wiki/nestjs-practise/chapter5#自动序列化
-- CRUD 抽象化框架构建 https://3rcd.com/wiki/nestjs-practise/chapter8
-
 ## CRUD 生成器
 
 - [增删改查生成器（仅限 TypeScript）](https://nest.nodejs.cn/recipes/crud-generator)
@@ -128,6 +122,10 @@ SwaggerModule 在路由处理程序中搜索所有 @Body()、@Query() 和 @Param
 
 - 在`src/common/response/http-faild.ts`里定义了HttpException拦截器，拦截后返回统一的json格式。
   - 但它不会拦截 Prisma 的异常，关于Prisma异常，可以重新定义一个 @Catch(PrismaClientValidationError)的拦截器，或者在 service 层手动处理，查看[官方文档:处理异常和错误](https://prisma.nodejs.cn/concepts/components/prisma-client/handling-exceptions-and-errors)
+
+### class-validator 参数校验
+
+用于dto的参数校验 https://www.npmjs.com/package/class-validator
 
 ## [JWT 身份验证](https://nest.nodejs.cn/security/authentication#jwt-%E4%BB%A4%E7%89%8C)
 

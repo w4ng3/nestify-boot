@@ -1,8 +1,13 @@
-import { Body, Controller, Post, Get } from '@nestjs/common'
+import { Body, Controller, Post, Get, Patch } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger'
 import { AuthLoginVo, ProfileVo } from './auth.vo'
-import { CreateUserDto, LoginUserDto } from '../users/user.dto'
+import {
+  ChangePasswordDto,
+  CreateUserDto,
+  LoginUserDto,
+  ResetPasswordDto,
+} from '@/modules/users/user.dto'
 import { ReqUser } from '@/common/decorator/param.decorator'
 import { Guest } from '@/common/decorator/guest.decorator'
 
@@ -29,5 +34,23 @@ export class AuthController {
   @Get('profile')
   getProfile(@ReqUser('id') id: number): Promise<ProfileVo> {
     return this.authService.profile(id)
+  }
+
+  /**
+   * 修改密码
+   */
+  @ApiOkResponse()
+  @Patch('change-password')
+  updatePassword(@ReqUser('id') id: number, @Body() dto: ChangePasswordDto) {
+    return this.authService.updatePassword(id, dto.oldPassword, dto.newPassword)
+  }
+
+  /**
+   * 重置密码
+   */
+  @Guest()
+  @Patch('reset-password')
+  resetPassword(@Body() dto: ResetPasswordDto) {
+    return this.authService.resetPassword(dto)
   }
 }

@@ -12,12 +12,15 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  email    String  @unique
-  name     String?
-  password String?
-  role     String? @default("USER")
-  posts    Post[]
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  password  String?
+  role      String?  @default("USER")
+  deleted   Boolean? @default(false) // 软删除
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  posts     Post[] // 一个用户可以有多个帖子，这里是一对多的关系
 }
 
 model Post {
