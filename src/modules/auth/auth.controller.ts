@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, Patch } from '@nestjs/common'
+import { Body, Controller, Post, Get, Patch, UseGuards } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger'
 import { AuthLoginVo, ProfileVo } from './auth.vo'
@@ -10,9 +10,13 @@ import {
 } from '@/modules/users/user.dto'
 import { ReqUser } from '@/common/decorator/param.decorator'
 import { Guest } from '@/common/decorator/guest.decorator'
+import { Roles } from '@/common/decorator/roles.decorator'
+import { RoleEnum } from '@/config/enum.config'
+import { RolesGuard } from './roles.guard'
 
 @ApiTags('auth')
 @ApiBearerAuth()
+@UseGuards(RolesGuard)
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -48,7 +52,8 @@ export class AuthController {
   /**
    * 重置密码
    */
-  @Guest()
+  // @Guest()
+  @Roles(RoleEnum.ADMIN)
   @Patch('reset-password')
   resetPassword(@Body() dto: ResetPasswordDto) {
     return this.authService.resetPassword(dto)

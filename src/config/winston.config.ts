@@ -19,7 +19,7 @@ export const WinstonOptionsConfig: LoggerOptions = {
   format: winston.format.combine(
     winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
     winston.format.ms(),
-    nestWinstonModuleUtilities.format.nestLike('MyApp', {
+    nestWinstonModuleUtilities.format.nestLike('Winston', {
       colors: true,
       prettyPrint: true,
     }),

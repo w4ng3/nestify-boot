@@ -4,7 +4,10 @@ import { createParamDecorator, ExecutionContext } from '@nestjs/common'
 import { PickType } from '@nestjs/swagger'
 import { FastifyRequest } from 'fastify/types/request'
 
-export class UserJwtType extends PickType(CreateUserDto, ['email'] as const) {
+/**
+ * @description token解析后的用户信息类型
+ */
+export class UserJwtType extends PickType(CreateUserDto, ['email', 'role'] as const) {
   /** 用户id */
   id: number
 }

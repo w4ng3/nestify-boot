@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config'
 import { FastifyRequest } from 'fastify'
 import { Reflector } from '@nestjs/core'
 import { ALLOW_GUEST } from '@/config'
+import { ConfigEnum } from '@/config/enum.config'
 
 /**
  * @description 用于验证用户是否登录的守卫
@@ -50,7 +51,7 @@ export class AuthGuard implements CanActivate {
     }
     try {
       const payload = await this.jwtService.verifyAsync(token, {
-        secret: this.configService.get<string>('JWT_SECRET'),
+        secret: this.configService.get<string>(ConfigEnum.JWT_SECRET),
       })
       // 💡 我们将负载分配给请求对象，以便我们可以在路由处理程序中访问它
       request['user'] = payload

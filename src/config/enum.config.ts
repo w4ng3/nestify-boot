@@ -34,3 +34,19 @@ export enum OrderType {
   /** @description: 按条件倒序 */
   DESC = 'desc',
 }
+
+/**
+ * @description 定义角色枚举
+ */
+export enum RoleEnum {
+  /** 超级管理员 */
+  SUPER_ADMIN = 'SUPER_ADMIN',
+  /** 管理员 */
+  ADMIN = 'ADMIN',
+  /** 普通用户 */
+  USER = 'USER',
+  /** VIP用户 */
+  VIP = 'VIP',
+  /** 测试用户 */
+  TESTER = 'TESTER',
+}

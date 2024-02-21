@@ -25,11 +25,12 @@ export class AuthService {
       dto.password = encrypt(dto.password, 10)
       const user = await this.prisma.user.create({ data: dto })
       const { id, email, name, role } = user
+      const payload: UserJwtType = { id, email, role }
       return {
         email,
         name,
         role,
-        access_token: await this.jwtService.signAsync({ id: id, email: email }),
+        access_token: await this.jwtService.signAsync(payload),
       }
     }
   }
@@ -44,7 +45,7 @@ export class AuthService {
         throw new UnauthorizedException({ message: '用户名或密码错误' })
       }
       const { id, email, name, role } = user
-      const payload: UserJwtType = { id: id, email: email }
+      const payload: UserJwtType = { id, email, role }
       return {
         email,
         name,
