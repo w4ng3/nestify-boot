@@ -1,6 +1,7 @@
-import { IsEmail, IsNotEmpty, IsString, Length, IsStrongPassword } from 'class-validator'
+import { IsEmail, IsNotEmpty, IsString, Length, IsStrongPassword, IsEnum } from 'class-validator'
 import { ApiProperty, IntersectionType, OmitType, PartialType, PickType } from '@nestjs/swagger'
 import { paginatedDto } from '@/common/model/paginate'
+import { PermissionsEnum } from '@/config/enum.config'
 
 export class CreateUserDto {
   @ApiProperty({ description: '邮箱', example: 'riddler@gmail.com' })
@@ -69,4 +70,26 @@ export class ResetPasswordDto {
     { message: '密码必须包含大小写字母和数字,长度大于6位' },
   )
   password: string
+}
+
+/**
+ * @description: 修改权限 DTO
+ */
+export class updatePermissionDto {
+  @ApiProperty({ description: '用户id', example: 1 })
+  @IsNotEmpty({ message: '用户id不能为空' })
+  id: number
+
+  @ApiProperty({
+    description: '权限',
+    example: [4, 8],
+    type: [Number],
+    enum: PermissionsEnum,
+  })
+  @IsEnum(PermissionsEnum, { each: true, message: '权限值不合法' })
+  permissions: PermissionsEnum[]
+
+  @ApiProperty({ description: '操作类型', example: 'add', enum: ['add', 'remove'] })
+  @IsEnum(['add', 'remove'], { message: '操作类型必须是add或remove' })
+  type: 'add' | 'remove'
 }

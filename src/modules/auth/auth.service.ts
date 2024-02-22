@@ -7,6 +7,8 @@ import { UserJwtType } from '@/common/decorator/param.decorator'
 import { decrypt, encrypt } from '@/utils/helpers'
 import { PrismaService } from '@/common/prisma/prisma.service'
 import { User as UserModel } from '@prisma/client'
+import { addPermission, removePermission } from './permission.guard'
+import { PermissionsEnum } from '@/config/enum.config'
 
 @Injectable()
 export class AuthService {
@@ -92,5 +94,30 @@ export class AuthService {
       data: { password: encrypt(dto.password, 10) },
     })
     return '重置成功'
+  }
+
+  /**
+   * 修改权限
+   * @param id 用户id
+   * @param permissions 权限列表
+   * @param type 操作类型 add | remove
+   */
+  async updatePermission(id: number, permissions: PermissionsEnum[], type: 'add' | 'remove') {
+    if (permissions.includes(PermissionsEnum.SUPER_ADMIN)) {
+      throw new HttpException('禁止添加超管权限', HttpStatus.FORBIDDEN)
+    }
+    const user: UserModel = await this.userService.findOne(id)
+    if (user.permission === PermissionsEnum.SUPER_ADMIN) {
+      throw new HttpException('超级管理员权限不可编辑', HttpStatus.FORBIDDEN)
+    }
+    if (type === 'add') {
+      const permission = addPermission(user.permission, permissions)
+      return this.prisma.user.update({ where: { id }, data: { permission } })
+    } else if (type === 'remove') {
+      const permission = removePermission(user.permission, permissions)
+      return this.prisma.user.update({ where: { id }, data: { permission } })
+    } else {
+      throw new HttpException('操作类型错误', HttpStatus.BAD_REQUEST)
+    }
   }
 }

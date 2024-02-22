@@ -7,6 +7,7 @@ import {
   CreateUserDto,
   LoginUserDto,
   ResetPasswordDto,
+  updatePermissionDto,
 } from '@/modules/users/user.dto'
 import { ReqUser } from '@/common/decorator/param.decorator'
 import { Guest } from '@/common/decorator/guest.decorator'
@@ -51,11 +52,23 @@ export class AuthController {
 
   /**
    * 重置密码
+   * @permission 必须是管理员才能重置密码
    */
   // @Guest()
   @RequirePermission(PermissionsEnum.ADMIN)
   @Patch('reset-password')
   resetPassword(@Body() dto: ResetPasswordDto) {
     return this.authService.resetPassword(dto)
+  }
+
+  /**
+   * 修改用户权限
+   * @permission 必须是管理员才能修改权限
+   */
+  @RequirePermission(PermissionsEnum.ADMIN)
+  @Patch('update-permission')
+  async updatePermission(@Body() dto: updatePermissionDto) {
+    await this.authService.updatePermission(dto.id, dto.permissions, dto.type)
+    return '修改成功'
   }
 }

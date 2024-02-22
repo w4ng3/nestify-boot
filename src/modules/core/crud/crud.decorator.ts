@@ -2,7 +2,8 @@
 import { NotFoundException, Type } from '@nestjs/common'
 import { CrudController } from './crud.controller'
 import { isNil } from 'lodash'
-import { ALLOW_GUEST, CRUD_INCLUDE, CRUD_OPTIONS } from '@/config'
+import { ALLOW_GUEST, CRUD_INCLUDE, CRUD_OPTIONS, PERMISSION_KEY } from '@/config'
+import { PermissionsEnum } from '@/config/enum.config'
 
 /**
  * CURD控制器方法列表
@@ -25,13 +26,21 @@ interface CrudMethodOption {
    * 该方法是否允许匿名访问
    */
   allowGuest?: boolean
+  /**
+   * 该方法需要的特定权限
+   */
+  permission?: PermissionsEnum
 }
 
 /**
  * 每个启用方法的配置
+ *
  */
 interface CurdItem {
   name: CurdMethod
+  /**
+   * @tips option里 allowGuest为true 时 不能配置 permission
+   */
   option?: CrudMethodOption
 }
 
@@ -91,7 +100,7 @@ export const Crud =
     }
 
     /**
-     * 是否允许匿名访问
+     * 是否允许匿名访问 & 是否需要特定权限
      * changed 是一个数组，里面存放的是启用的且未被重写的方法
      */
     for (const key of changed) {
@@ -99,6 +108,9 @@ export const Crud =
       const option = typeof find === 'string' ? {} : find.option ?? {}
       if (option.allowGuest) {
         Reflect.defineMetadata(ALLOW_GUEST, true, Target.prototype, key)
+      }
+      if (option.permission) {
+        Reflect.defineMetadata(PERMISSION_KEY, option.permission, Target.prototype, key)
       }
     }
 
