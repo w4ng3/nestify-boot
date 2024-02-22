@@ -12,8 +12,9 @@ async function main() {
     where: { email: 'riddler@gmail.com' },
     update: {},
     create: {
-      name: 'Riddler',
+      name: 'Super Admin',
       email: 'riddler@gmail.com',
+      permission: 1, // 拥有最高权限
       // 密码是: Mm1234
       password: '$2b$10$nDnKawC1Pzj8i9r6klzqceyK9LdWss7ExXt86cdrMc8HskXT6B9Iu',
       // 这里使用了嵌套写入，创建用户的同时创建了一篇文章

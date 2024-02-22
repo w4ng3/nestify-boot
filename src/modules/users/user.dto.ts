@@ -1,11 +1,4 @@
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsString,
-  IsOptional,
-  Length,
-  IsStrongPassword,
-} from 'class-validator'
+import { IsEmail, IsNotEmpty, IsString, Length, IsStrongPassword } from 'class-validator'
 import { ApiProperty, IntersectionType, OmitType, PartialType, PickType } from '@nestjs/swagger'
 import { paginatedDto } from '@/common/model/paginate'
 
@@ -22,10 +15,6 @@ export class CreateUserDto {
     { message: '密码必须包含大小写字母和数字,长度大于6位' },
   )
   password: string
-  @ApiProperty({ description: '角色', required: false, default: 'USER' })
-  @IsOptional()
-  @IsString() // 可选字段,如果为null或undefined则跳过验证
-  role?: string
 }
 
 // PartialType() 函数接受一个类作为参数，并创建一个新类，该类具有与原始类相同的属性，但是它们都是可选的。

@@ -6,8 +6,8 @@ import { Guest } from '@/common/decorator/guest.decorator'
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
   @Guest()
+  @Get()
   getHello(): string {
     return this.appService.getHello()
   }

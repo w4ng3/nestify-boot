@@ -10,13 +10,13 @@ import {
 } from '@/modules/users/user.dto'
 import { ReqUser } from '@/common/decorator/param.decorator'
 import { Guest } from '@/common/decorator/guest.decorator'
-import { Roles } from '@/common/decorator/roles.decorator'
-import { RoleEnum } from '@/config/enum.config'
-import { RolesGuard } from './roles.guard'
+import { RequirePermission } from '@/common/decorator/permission.decorator'
+import { PermissionsEnum } from '@/config/enum.config'
+import { PermissionGuard } from './permission.guard'
 
 @ApiTags('auth')
 @ApiBearerAuth()
-@UseGuards(RolesGuard)
+@UseGuards(PermissionGuard)
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -53,7 +53,7 @@ export class AuthController {
    * 重置密码
    */
   // @Guest()
-  @Roles(RoleEnum.ADMIN)
+  @RequirePermission(PermissionsEnum.ADMIN)
   @Patch('reset-password')
   resetPassword(@Body() dto: ResetPasswordDto) {
     return this.authService.resetPassword(dto)

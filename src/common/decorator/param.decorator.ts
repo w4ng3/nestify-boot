@@ -7,7 +7,7 @@ import { FastifyRequest } from 'fastify/types/request'
 /**
  * @description token解析后的用户信息类型
  */
-export class UserJwtType extends PickType(CreateUserDto, ['email', 'role'] as const) {
+export class UserJwtType extends PickType(CreateUserDto, ['email'] as const) {
   /** 用户id */
   id: number
 }

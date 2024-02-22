@@ -24,12 +24,11 @@ export class AuthService {
     } else {
       dto.password = encrypt(dto.password, 10)
       const user = await this.prisma.user.create({ data: dto })
-      const { id, email, name, role } = user
-      const payload: UserJwtType = { id, email, role }
+      const { id, email, name } = user
+      const payload: UserJwtType = { id, email }
       return {
         email,
         name,
-        role,
         access_token: await this.jwtService.signAsync(payload),
       }
     }
@@ -44,12 +43,11 @@ export class AuthService {
       if (!decrypt(dto.password, user.password)) {
         throw new UnauthorizedException({ message: '用户名或密码错误' })
       }
-      const { id, email, name, role } = user
-      const payload: UserJwtType = { id, email, role }
+      const { id, email, name } = user
+      const payload: UserJwtType = { id, email }
       return {
         email,
         name,
-        role,
         access_token: await this.jwtService.signAsync(payload),
       }
     }
@@ -60,8 +58,8 @@ export class AuthService {
    */
   async profile(id: number): Promise<ProfileVo> {
     const user: UserModel = await this.userService.findOne(id)
-    const { email, name, role } = user
-    return { email, name, role }
+    const { email, name, permission } = user
+    return { email, name, permission }
   }
 
   /**
