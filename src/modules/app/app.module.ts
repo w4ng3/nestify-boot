@@ -8,6 +8,7 @@ import { AuthModule } from '@/modules/auth/auth.module'
 import { ConfigModule } from '@nestjs/config'
 import { WinstonModule } from 'nest-winston'
 import { WinstonOptionsConfig } from '@/config/winston.config'
+import { FileModule } from '@/modules/core/file/file.module'
 
 const envFilePath = `.env.${process.env.NODE_ENV || `development`}`
 
@@ -19,6 +20,7 @@ const envFilePath = `.env.${process.env.NODE_ENV || `development`}`
     UsersModule,
     PostsModule,
     AuthModule,
+    FileModule,
   ],
   controllers: [AppController],
   providers: [AppService],

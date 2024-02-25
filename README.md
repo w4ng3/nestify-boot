@@ -161,3 +161,7 @@ test(@ReqUser('id') id: number, @ReqUser() user: UserJwtType) {
 已在全局响应和拦截器里使用，可参考用法。[Link~](src/common/response/http-faild.ts)
 
 生产环境下，请注释掉`config/winston.config.ts`里的控制台日志。
+
+## 权限管理
+
+使用二进制位运算进行权限管理，参考自[权限控制 | 使用二进制做权限控制功能](https://zhuanlan.zhihu.com/p/30103832)

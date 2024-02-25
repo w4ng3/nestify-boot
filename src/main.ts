@@ -9,6 +9,9 @@ import { HttpFaild } from './common/response/http-faild'
 import { SwaggerModule, DocumentBuilder, SwaggerDocumentOptions } from '@nestjs/swagger'
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston'
 import { LoggerService } from '@nestjs/common/services/logger.service'
+import { contentParser } from 'fastify-file-interceptor'
+import { join } from 'path'
+import helmet from '@fastify/helmet'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -20,6 +23,24 @@ async function bootstrap() {
       // prefix: '/api', // 设置全局前缀
     }),
   )
+
+  // 安全性中间件
+  await app.register(helmet, {
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: [`'self'`],
+        styleSrc: [`'self'`, `'unsafe-inline'`],
+        imgSrc: [`'self'`, 'data:', 'validator.swagger.io'],
+        scriptSrc: [`'self'`, `https: 'unsafe-inline'`],
+      },
+    },
+  })
+
+  // 文件上传中间件
+  await app.register(contentParser)
+  // 静态资源中间件
+  // app.useStaticAssets({ root: join(__dirname, 'upload/imgs') })
+
   // 使用 class-validator 验证器,
   // 在应用级别绑定 ValidationPipe 开始，从而确保所有端点都受到保护，不会接收到不正确的数据
   useContainer(app.select(AppModule), { fallbackOnErrors: true })
