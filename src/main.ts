@@ -12,6 +12,7 @@ import { LoggerService } from '@nestjs/common/services/logger.service'
 import { contentParser } from 'fastify-file-interceptor'
 import { join } from 'path'
 import helmet from '@fastify/helmet'
+import { STATIC_DIR, STATIC_PREFIX } from './config'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -38,8 +39,9 @@ async function bootstrap() {
 
   // 文件上传中间件
   await app.register(contentParser)
-  // 静态资源中间件
-  // app.useStaticAssets({ root: join(__dirname, 'upload/imgs') })
+  // 静态文件服务,可以直接访问 根目录上层的 nest-static 文件夹下的文件，
+  // 例如：http://localhost:3000/assets/1.jpg
+  app.useStaticAssets({ root: join(process.cwd(), STATIC_DIR), prefix: STATIC_PREFIX })
 
   // 使用 class-validator 验证器,
   // 在应用级别绑定 ValidationPipe 开始，从而确保所有端点都受到保护，不会接收到不正确的数据

@@ -10,7 +10,6 @@ import {
   UseInterceptors,
 } from '@nestjs/common'
 import { FileService } from './file.service'
-import { Guest } from '@/common/decorator/guest.decorator'
 import { createReadStream } from 'fs'
 import { join } from 'path'
 import { FastifyReply, FastifyRequest } from 'fastify'
@@ -25,6 +24,7 @@ import {
 import { editFileName, imageFileFilter } from './file-upload-util'
 import { MultipleFilesDto, SingleFileDto } from './file.dto'
 import { fileMapper, filesMapper } from './file.mapper'
+import { STATIC_DIR, UPLOAD_IMG_DIR } from '@/config'
 
 @ApiTags('file')
 @ApiBearerAuth()
@@ -44,7 +44,7 @@ export class FileController {
   // application/x-gzip：gzip文件
   // application/x-compressed：压缩文件
   // application/x-mp3：mp3文件
-  @Guest()
+  @ApiOperation({ summary: '下载README' })
   @Get('download/readme')
   getReadme(@Res() reply: FastifyReply) {
     const dateStr = dayjs().format('YYYY-MM-DD')
@@ -61,7 +61,7 @@ export class FileController {
   @UseInterceptors(
     FileFastifyInterceptor('file', {
       storage: diskStorage({
-        destination: './upload/imgs',
+        destination: '../nest-static/upload/imgs',
         filename: editFileName,
       }),
       fileFilter: imageFileFilter,
@@ -70,10 +70,8 @@ export class FileController {
   uploadSingle(
     @Req() req: FastifyRequest,
     @UploadedFile() file: Express.Multer.File,
-    @Body() body: SingleFileDto,
+    @Body() _body: SingleFileDto,
   ) {
-    // console.log({ ...body, file: file })
-    // return { ...body, file: fileMapper({ file, req }) }
     return fileMapper({ file, req })
   }
 
@@ -83,7 +81,7 @@ export class FileController {
   @UseInterceptors(
     FilesFastifyInterceptor('files', 9, {
       storage: diskStorage({
-        destination: './upload/imgs',
+        destination: `${STATIC_DIR}${UPLOAD_IMG_DIR}`,
         filename: editFileName,
       }),
       fileFilter: imageFileFilter,
@@ -92,9 +90,8 @@ export class FileController {
   uploadMultiple(
     @Req() req: FastifyRequest,
     @UploadedFiles() files: Express.Multer.File[],
-    @Body() body: MultipleFilesDto,
+    @Body() _body: MultipleFilesDto,
   ) {
-    // return { ...body, files: filesMapper({ files, req }) }
     return filesMapper({ files, req })
   }
 
@@ -104,14 +101,12 @@ export class FileController {
   @UseInterceptors(
     AnyFilesFastifyInterceptor({
       storage: diskStorage({
-        destination: './upload/files',
+        destination: `${STATIC_DIR}/upload/files`,
         filename: editFileName,
       }),
-      // fileFilter: imageFileFilter,
     }),
   )
   anyFile(@UploadedFiles() files: Express.Multer.File, @Body() body: SingleFileDto) {
-    // console.log({ ...body, photo_url: files })
     return { ...body, files }
   }
 }

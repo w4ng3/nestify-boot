@@ -28,7 +28,7 @@ module.exports = {
   rules: {
     'no-undef': 'off', // 禁止使用未定义的变量(关闭这个主要是去掉全局TS类型的警告)
     /** TS相关 */
-    '@typescript-eslint/no-unused-vars': 'warn', // 禁止定义未使用的变量
+    '@typescript-eslint/no-unused-vars': ['error', { "argsIgnorePattern": "^_" }], // 禁止定义未使用的变量, 忽略_开头的变量
     '@typescript-eslint/no-unsafe-return': 'warn', // 禁止返回any类型
     '@typescript-eslint/interface-name-prefix': 'off', // 接口名称必须以I开头
     '@typescript-eslint/explicit-function-return-type': 'off',
