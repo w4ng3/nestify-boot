@@ -41,8 +41,7 @@ export class CrudController {
    */
   @ApiOperation({ summary: '根据ID查询' })
   @Get(':id')
-  findOne(@Param() params: FindOneParams, @CrudInclude() inc: any) {
-    console.log('include? :>> ', inc)
+  findOne(@Param() params: FindOneParams, @CrudInclude() inc?: any) {
     return this.service.findOne(+params.id, inc)
   }
 
@@ -52,7 +51,7 @@ export class CrudController {
   // @SerializeOptions({ excludePrefixes: ['deleted', 'createdAt', 'updatedAt'] })
   @ApiOperation({ summary: '查询全部' })
   @Get('list')
-  findAll(@CrudInclude() inc: any) {
+  findAll(@CrudInclude() inc?: any) {
     return this.service.findAll(inc)
   }
 
@@ -62,7 +61,7 @@ export class CrudController {
   // @ApiPaginatedResponse(Vo)
   @ApiOperation({ summary: '分页查询' })
   @Post('page')
-  findPage(@Body() dto: any, @CrudInclude() inc: any): Promise<PaginatedVo<any>> {
+  findPage(@Body() dto: any, @CrudInclude() inc?: any): Promise<PaginatedVo<any>> {
     return this.service.findPage(dto, inc)
   }
 
@@ -99,7 +98,7 @@ export class CrudController {
    */
   @ApiOperation({ summary: '分页查询已软删除的帖子' })
   @Post('deleted/page')
-  findPageOfDeleted(@Body() dto: any, @CrudInclude() inc: any) {
+  findPageOfDeleted(@Body() dto: any, @CrudInclude() inc?: any) {
     return this.service.findPage(dto, inc, QueryMode.DEL)
   }
 

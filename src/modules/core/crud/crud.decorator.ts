@@ -34,7 +34,6 @@ interface CrudMethodOption {
 
 /**
  * 每个启用方法的配置
- *
  */
 interface CurdItem {
   name: CurdMethod

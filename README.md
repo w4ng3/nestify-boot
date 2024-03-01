@@ -7,6 +7,8 @@
 
 技术栈： [Nest](https://github.com/nestjs/nest) + [Fastify](https://www.fastify.cn/) + Prisma + mysql
 
+- [单元测试](./src/modules/core/unit-test.md)
+
 ## Installation
 
 ```bash
@@ -110,7 +112,7 @@ export class UsersController {
 
 SwaggerModule 在路由处理程序中搜索所有 @Body()、@Query() 和 @Param() 装饰器以生成 API 文档。它还通过利用反射创建相应的模型定义，我们主要的心智负担在 DTO 上定义属性，当然，这个也可以靠[CLI插件](https://nest.nodejs.cn/openapi/cli-plugin)帮助生成，或者使用 Github Copilot 来面向TAB编程。
 
-项目运行后打开 `http://localhost:3000/api#` 查看web文档，也可在`http://localhost:3000/api-json`查看json数据，导入到 Apifox 太方便了。
+项目运行后打开 `http://localhost:3000/swagger#` 查看web文档，也可在`http://localhost:3000/swagger-json`查看json数据，导入到 Apifox 太方便了。
 
 - 定义了自定义装饰器[ApiPaginatedResponse](./src/common/decorator/paginated.decorator.ts)，用于Swagger响应类型，但没有定义最外层的http响应类型装饰器，感觉没有必要，多处重复看起来杂乱，有TS类型就够了。
 

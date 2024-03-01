@@ -12,6 +12,8 @@ export const SKIP_INTERCEPTOR = 'skipInterceptor'
 /**
  * @description 环境变量
  */
+/** 全局路由前缀 */
+export const GLOBAL_PREFIX = 'api'
 /** 静态文件目录：定义在后端文件外层 */
 export const STATIC_DIR = '../nest-static'
 /** 请求静态文件所需的前缀 */

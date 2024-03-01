@@ -2,12 +2,12 @@ import { Controller, Get, Query } from '@nestjs/common'
 import { PostsService } from './posts.service'
 import { CreatePostDto, PageQueryPostDto, UpdatePostDto } from './post.dto'
 import { Post as PostModel } from '@prisma/client'
-import { UseInterceptors } from '@nestjs/common'
-import { CacheInterceptor } from '@nestjs/cache-manager'
 import { ApiTags, ApiOkResponse, ApiOperation, ApiBearerAuth } from '@nestjs/swagger'
 import { PostVo } from './post.vo'
 import { CrudController } from '@/modules/core/crud/crud.controller'
 import { Crud } from '@/modules/core/crud/crud.decorator'
+// import { UseInterceptors } from '@nestjs/common'
+// import { CacheInterceptor } from '@nestjs/cache-manager'
 
 @Crud({
   enabled: [
@@ -30,7 +30,7 @@ import { Crud } from '@/modules/core/crud/crud.decorator'
 @ApiTags('posts')
 @ApiBearerAuth()
 @Controller('posts')
-@UseInterceptors(CacheInterceptor) // 使用缓存拦截器, 仅对get请求有效
+// @UseInterceptors(CacheInterceptor) // 使用缓存拦截器, 仅对get请求有效
 export class PostsController extends CrudController {
   constructor(private readonly postsService: PostsService) {
     super(postsService)

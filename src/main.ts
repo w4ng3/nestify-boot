@@ -12,7 +12,7 @@ import { LoggerService } from '@nestjs/common/services/logger.service'
 import { contentParser } from 'fastify-file-interceptor'
 import { join } from 'path'
 import helmet from '@fastify/helmet'
-import { STATIC_DIR, STATIC_PREFIX } from './config'
+import { GLOBAL_PREFIX, STATIC_DIR, STATIC_PREFIX } from './config'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -21,9 +21,10 @@ async function bootstrap() {
     new FastifyAdapter({
       logger: false,
       ignoreTrailingSlash: true,
-      // prefix: '/api', // 设置全局前缀
     }),
   )
+
+  app.setGlobalPrefix(GLOBAL_PREFIX) // 设置全局前缀
 
   // 安全性中间件
   await app.register(helmet, {
@@ -84,18 +85,19 @@ async function bootstrap() {
     const config = new DocumentBuilder()
       .setTitle('nest-fastify-api 接口文档')
       .setDescription(
-        '-你好哇，crud boy，查看json数据请导航到 <a>http://localhost:3000/api-json</a>',
+        '-你好哇，crud boy，查看json数据请导航到 <a>http://localhost:3000/swagger-json</a>',
       )
       .setVersion('1.0')
       .addBearerAuth()
       .setExternalDoc('查看更多', 'https://swagger.io')
-      .addServer('http://localhost:3000', '本地开发环境')
+      .addServer('http://localhost:3000/' + GLOBAL_PREFIX, '本地开发环境')
       .build()
     const options: SwaggerDocumentOptions = {
       operationIdFactory: (controllerKey: string, methodKey: string) => methodKey,
+      ignoreGlobalPrefix: true,
     }
     const document = SwaggerModule.createDocument(app, config, options)
-    SwaggerModule.setup('api', app, document)
+    SwaggerModule.setup('swagger', app, document)
   }
   // 监听端口
   await app.listen(3000, '0.0.0.0')
@@ -104,6 +106,6 @@ async function bootstrap() {
 }
 void bootstrap().then((logger) => {
   logger.log(
-    `successfully started server, url: http://localhost:3000, env: ${process.env.NODE_ENV}`,
+    `successfully started server, url: http://localhost:3000/${GLOBAL_PREFIX}, env: ${process.env.NODE_ENV}`,
   )
 })
