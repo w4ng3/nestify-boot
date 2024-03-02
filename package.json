@@ -20,7 +20,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prisma:doc": "prisma generate docs prisma/docs",
-    "prisma:push": "prisma generate && prisma db push"
+    "prisma:push": "prisma generate && prisma db push",
+    "gen": "node src/modules/core/crud/generate.js"
   },
   "dependencies": {
     "@fastify/helmet": "^11.1.1",
@@ -60,6 +61,7 @@
     "@types/supertest": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^6.19.0",
     "@typescript-eslint/parser": "^6.19.0",
+    "commander": "^12.0.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
@@ -79,7 +81,7 @@
   },
   "jest": {
     "rootDir": "src",
-    "moduleNameMapper":{
+    "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/$1"
     },
     "moduleFileExtensions": [

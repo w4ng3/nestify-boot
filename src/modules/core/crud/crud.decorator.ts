@@ -48,7 +48,10 @@ interface CurdItem {
  */
 interface CurdOptions {
   // id?: string
-  /** 需要启用的方法 */
+  /**
+   * 需要启用的方法
+   * create | findOne | findAll | findPage | update | delete | findPageOfDeleted | restore
+   **/
   enabled: Array<CurdMethod | CurdItem>
   /** 一些方法要使用到的自定义DTO */
   dtos: {

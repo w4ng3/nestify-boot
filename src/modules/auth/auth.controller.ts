@@ -1,6 +1,6 @@
 import { Body, Controller, Post, Get, Patch, UseGuards } from '@nestjs/common'
 import { AuthService } from './auth.service'
-import { ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger'
+import { ApiTags, ApiOkResponse, ApiBearerAuth, ApiOperation } from '@nestjs/swagger'
 import { AuthLoginVo, ProfileVo } from './auth.vo'
 import {
   ChangePasswordDto,
@@ -23,11 +23,13 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Guest()
+  @ApiOperation({ summary: '注册' })
   @Post('register')
   register(@Body() createUserDto: CreateUserDto) {
     return this.authService.register(createUserDto)
   }
 
+  @ApiOperation({ summary: '登录' })
   @ApiOkResponse({ type: AuthLoginVo })
   @Guest()
   @Post('login')
@@ -35,6 +37,7 @@ export class AuthController {
     return this.authService.login(loginUserDto)
   }
 
+  @ApiOperation({ summary: '获取当前用户信息' })
   @ApiOkResponse({ type: ProfileVo, description: '根据token获取当前用户信息' })
   @Get('profile')
   getProfile(@ReqUser('id') id: number): Promise<ProfileVo> {
@@ -44,6 +47,7 @@ export class AuthController {
   /**
    * 修改密码
    */
+  @ApiOperation({ summary: '修改密码' })
   @ApiOkResponse()
   @Patch('change-password')
   updatePassword(@ReqUser('id') id: number, @Body() dto: ChangePasswordDto) {
@@ -55,6 +59,7 @@ export class AuthController {
    * @permission 必须是管理员才能重置密码
    */
   // @Guest()
+  @ApiOperation({ summary: '重置密码' })
   @RequirePermission(PermissionsEnum.ADMIN)
   @Patch('reset-password')
   resetPassword(@Body() dto: ResetPasswordDto) {
@@ -65,6 +70,7 @@ export class AuthController {
    * 修改用户权限
    * @permission 必须是管理员才能修改权限
    */
+  @ApiOperation({ summary: '修改用户权限' })
   @RequirePermission(PermissionsEnum.ADMIN)
   @Patch('update-permission')
   async updatePermission(@Body() dto: updatePermissionDto) {

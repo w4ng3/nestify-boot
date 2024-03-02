@@ -18,6 +18,7 @@ module.exports = {
     node: true,
     jest: true,
   },
+  // 忽略的文件夹
   ignorePatterns: ['.eslintrc.js', 'prisma', 'typings'],
   /**
    * "off" 或 0    ==>  关闭规则
