@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { ConfigEnum } from '@/config/enum.config'
 import { AuthGuard } from './auth.guard'
 import { EmailService } from '@/common/services/email.service'
+import { SmsService } from '@/common/services/sms.service'
 /**
  * 全局注册 JWT 模块
  * 有关可用配置选项的更多详细信息，请参阅文档了解
@@ -33,6 +34,6 @@ import { EmailService } from '@/common/services/email.service'
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, { provide: 'APP_GUARD', useClass: AuthGuard }, EmailService],
+  providers: [AuthService, { provide: 'APP_GUARD', useClass: AuthGuard }, EmailService, SmsService],
 })
 export class AuthModule {}

@@ -30,3 +30,11 @@ export const EMAIL_CONFIG = {
     pass: '*****', // 授权码
   },
 }
+
+/** 阿里云 */
+export const aliyConfig = {
+  accessKey: '*******',
+  accessSecret: '********',
+  signName: '阿里云短信测试',
+  templateCode: 'SMS_154950909',
+}

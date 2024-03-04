@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { ArrayNotEmpty, IsEmail, IsNumberString } from 'class-validator'
+import { ArrayNotEmpty, IsEmail, IsNumberString, IsPhoneNumber } from 'class-validator'
 
 /**
  * 查询单个参数，用于 class-validator 校验
@@ -40,4 +40,13 @@ export class MailInfoDto {
   @ApiProperty({ description: '接收方邮箱 string | string[]', example: 'xxx@gmail.com' })
   @IsEmail({}, { each: true, message: '邮箱格式不正确' })
   to: string | string[]
+}
+
+/**
+ * @description 手机号
+ */
+export class SmsDto {
+  @ApiProperty({ description: '手机号', example: '17368359292' })
+  @IsPhoneNumber('CN')
+  phone: string
 }
