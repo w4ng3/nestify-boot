@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { ArrayNotEmpty, IsNumberString } from 'class-validator'
+import { ArrayNotEmpty, IsEmail, IsNumberString } from 'class-validator'
 
 /**
  * 查询单个参数，用于 class-validator 校验
@@ -31,4 +31,13 @@ export class BaseVo {
   updatedAt: Date
   // @ApiProperty({ description: '是否已删除', example: false })
   // deleted: boolean
+}
+
+/**
+ * @description: 发送邮件
+ */
+export class MailInfoDto {
+  @ApiProperty({ description: '接收方邮箱 string | string[]', example: 'xxx@gmail.com' })
+  @IsEmail({}, { each: true, message: '邮箱格式不正确' })
+  to: string | string[]
 }

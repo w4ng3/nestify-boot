@@ -20,3 +20,13 @@ export const STATIC_DIR = '../nest-static'
 export const STATIC_PREFIX = '/assets'
 /** 图片上传目录 */
 export const UPLOAD_IMG_DIR = '/upload/imgs'
+/** 邮箱服务配置 */
+export const EMAIL_CONFIG = {
+  host: 'smtp.qq.com',
+  port: 465,
+  secure: true,
+  auth: {
+    user: 'xxx@qq.com', // 发送方邮箱
+    pass: '*****', // 授权码
+  },
+}

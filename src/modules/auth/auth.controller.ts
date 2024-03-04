@@ -14,13 +14,18 @@ import { Guest } from '@/common/decorator/guest.decorator'
 import { RequirePermission } from '@/common/decorator/permission.decorator'
 import { PermissionsEnum } from '@/config/enum.config'
 import { PermissionGuard } from './permission.guard'
+import { EmailService } from '@/common/services/email.service'
+import { MailInfoDto } from '@/common/model/params'
 
 @ApiTags('auth')
 @ApiBearerAuth()
 @UseGuards(PermissionGuard)
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private emailService: EmailService,
+  ) {}
 
   @Guest()
   @ApiOperation({ summary: '注册' })
@@ -76,5 +81,12 @@ export class AuthController {
   async updatePermission(@Body() dto: updatePermissionDto) {
     await this.authService.updatePermission(dto.id, dto.permissions, dto.type)
     return '修改成功'
+  }
+
+  @Guest()
+  @ApiOperation({ summary: '发送验证码邮件' })
+  @Post('send-email')
+  sendEmail(@Body() mailInfo: MailInfoDto) {
+    return this.emailService.sendCodeEmail(mailInfo)
   }
 }

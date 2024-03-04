@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './modules/app/app.module'
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify'
@@ -25,6 +24,8 @@ async function bootstrap() {
   )
 
   app.setGlobalPrefix(GLOBAL_PREFIX) // 设置全局前缀
+
+  app.enableCors({ origin: '*' }) // 允许跨域
 
   // 安全性中间件
   await app.register(helmet, {
