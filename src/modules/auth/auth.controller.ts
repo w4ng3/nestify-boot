@@ -96,8 +96,6 @@ export class AuthController {
   @ApiOperation({ summary: '发送短信验证码' })
   @Post('send-sms')
   sendSms(@Body() dot: SmsDto) {
-    //生成随机六位数
-    const captcha = Math.floor(Math.random() * 1000000)
-    return this.smsService.sendCode(dot.phone, captcha)
+    return this.smsService.sendCode(dot.phone)
   }
 }

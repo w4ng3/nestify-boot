@@ -167,3 +167,7 @@ test(@ReqUser('id') id: number, @ReqUser() user: UserJwtType) {
 ## 权限管理
 
 使用二进制位运算进行权限管理，参考自[权限控制 | 使用二进制做权限控制功能](https://zhuanlan.zhihu.com/p/30103832)
+
+## 缓存 Redis
+
+- [nestjs-redis](https://github.com/liaoliaots/nestjs-redis/blob/fc697638af9ecf80ad2992a923047c626f2bf95b/docs/latest/redis.md#usage)

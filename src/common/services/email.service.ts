@@ -4,14 +4,16 @@ import * as EmailTemplate from 'email-templates'
 import { join } from 'path'
 import { MailInfoDto } from '../model/params'
 import { EMAIL_CONFIG } from '@/config'
-// 参考：[如何优雅的使用nestjs实现邮件发送](https://juejin.cn/post/7285233095057358884)
+import { InjectRedis } from '@liaoliaots/nestjs-redis'
+import Redis from 'ioredis'
 
 @Injectable()
 export class EmailService {
   private transporter: nodemailer.Transporter
   private emailTemplate: EmailTemplate
   private mailConfig = EMAIL_CONFIG
-  constructor() {
+
+  constructor(@InjectRedis() private readonly redis: Redis) {
     this.transporter = nodemailer.createTransport(this.mailConfig)
     this.emailTemplate = new EmailTemplate()
   }
@@ -22,6 +24,9 @@ export class EmailService {
   async sendCodeEmail(mailInfo: MailInfoDto): Promise<string> {
     //生成随机六位数
     const captcha = Math.floor(Math.random() * 1000000)
+    // 存储验证码到redis，设置过期时间为5分钟
+    await this.redis.set(`emailCaptcha:${mailInfo.to}`, captcha, 'EX', 3000)
+
     const template = join(process.cwd(), 'src/assets', 'email-template')
     const html = await this.emailTemplate.render(template, {
       name: 'js developer',

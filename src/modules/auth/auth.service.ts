@@ -9,14 +9,20 @@ import { PrismaService } from '@/common/prisma/prisma.service'
 import { User as UserModel } from '@prisma/client'
 import { addPermission, removePermission } from './permission.guard'
 import { PermissionsEnum } from '@/config/enum.config'
-
+import { InjectRedis } from '@liaoliaots/nestjs-redis'
+import Redis from 'ioredis'
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UsersService,
     private jwtService: JwtService,
     private prisma: PrismaService,
+    @InjectRedis() private readonly redis: Redis,
   ) {}
+
+  // async getFromRedis(key: string) {
+  //   return await this.redis.get(key)
+  // }
 
   /** @description 注册 */
   async register(dto: CreateUserDto): Promise<any> {

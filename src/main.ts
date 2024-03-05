@@ -16,7 +16,6 @@ import { GLOBAL_PREFIX, STATIC_DIR, STATIC_PREFIX } from './config'
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    // 更多日志配置参考： https://www.fastify.cn/docs/latest/Logging/
     new FastifyAdapter({
       logger: false,
       ignoreTrailingSlash: true,
