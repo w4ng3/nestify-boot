@@ -9,7 +9,6 @@ import {
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common'
-import { FileService } from './file.service'
 import { createReadStream } from 'fs'
 import { join } from 'path'
 import { FastifyReply, FastifyRequest } from 'fastify'
@@ -25,12 +24,13 @@ import { editFileName, imageFileFilter } from './file-upload-util'
 import { MultipleFilesDto, SingleFileDto } from './file.dto'
 import { fileMapper, filesMapper } from './file.mapper'
 import { STATIC_DIR, UPLOAD_IMG_DIR } from '@/config'
+import { OssService } from '@/common/services/oss.service'
 
 @ApiTags('file')
 @ApiBearerAuth()
 @Controller('file')
 export class FileController {
-  constructor(private readonly fileService: FileService) {}
+  constructor(protected readonly ossService: OssService) {}
 
   // 设置响应头，可以直接使用装饰器 @Header('Content-Type', 'application/octet-stream')，
   // 也可以使用 fastify 自身的方法，这样的好处可以读取dto变量动态设置文件名，文档在 https://fastify.dev/docs/latest/Reference/Reply/#headerkey-value
@@ -61,7 +61,7 @@ export class FileController {
   @UseInterceptors(
     FileFastifyInterceptor('file', {
       storage: diskStorage({
-        destination: '../nest-static/upload/imgs',
+        destination: `${STATIC_DIR}${UPLOAD_IMG_DIR}`,
         filename: editFileName,
       }),
       fileFilter: imageFileFilter,
@@ -73,6 +73,21 @@ export class FileController {
     @Body() _body: SingleFileDto,
   ) {
     return fileMapper({ file, req })
+  }
+
+  @ApiOperation({ summary: '单图上传OSS' })
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(
+    FileFastifyInterceptor('file', {
+      fileFilter: imageFileFilter, // 过滤：只支持图片格式
+      limits: {
+        fileSize: 1024 * 1024 * 3, // 最大支持 3M 图片
+      },
+    }),
+  )
+  @Post('upload/oss')
+  uploadFileOss(@UploadedFile() file: Express.Multer.File, @Body() _body: SingleFileDto) {
+    return this.ossService.uploadOss(file)
   }
 
   @ApiOperation({ summary: '多图上传', description: '最多上传9个文件' })
