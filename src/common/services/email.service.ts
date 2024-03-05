@@ -3,18 +3,29 @@ import * as nodemailer from 'nodemailer'
 import * as EmailTemplate from 'email-templates'
 import { join } from 'path'
 import { MailInfoDto } from '../model/params'
-import { EMAIL_CONFIG } from '@/config'
 import { InjectRedis } from '@liaoliaots/nestjs-redis'
 import Redis from 'ioredis'
+import { ConfigService } from '@nestjs/config'
+import { ConfigEnum } from '@/config/enum.config'
 
 @Injectable()
 export class EmailService {
   private transporter: nodemailer.Transporter
   private emailTemplate: EmailTemplate
-  private mailConfig = EMAIL_CONFIG
 
-  constructor(@InjectRedis() private readonly redis: Redis) {
-    this.transporter = nodemailer.createTransport(this.mailConfig)
+  constructor(
+    @InjectRedis() private readonly redis: Redis,
+    private readonly configService: ConfigService,
+  ) {
+    this.transporter = nodemailer.createTransport({
+      host: this.configService.get(ConfigEnum.EMAIL_HOST),
+      port: this.configService.get(ConfigEnum.EMAIL_PORT),
+      secure: true,
+      auth: {
+        user: this.configService.get(ConfigEnum.EMAIL_USER),
+        pass: this.configService.get(ConfigEnum.EMAIL_PASS),
+      },
+    })
     this.emailTemplate = new EmailTemplate()
   }
 
@@ -33,7 +44,7 @@ export class EmailService {
       captcha: captcha,
     })
     await this.transporter.sendMail({
-      from: this.mailConfig.auth.user, //发送方邮箱
+      from: this.configService.get(ConfigEnum.EMAIL_USER), //发送方邮箱
       to: mailInfo.to, //接收方邮箱
       subject: 'おはよう', // 标题
       html,

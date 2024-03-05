@@ -3,8 +3,8 @@ import { AppModule } from './modules/app/app.module'
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify'
 import { useContainer } from 'class-validator'
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe'
-import { SuccessResponse } from './common/response/success-response'
-import { HttpFaild } from './common/response/http-faild'
+import { SuccessResponse } from './common/interceptor/success-response'
+import { HttpFaild } from './common/interceptor/http-faild'
 import { SwaggerModule, DocumentBuilder, SwaggerDocumentOptions } from '@nestjs/swagger'
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston'
 import { LoggerService } from '@nestjs/common/services/logger.service'
@@ -12,6 +12,7 @@ import { contentParser } from 'fastify-file-interceptor'
 import { join } from 'path'
 import helmet from '@fastify/helmet'
 import { GLOBAL_PREFIX, STATIC_DIR, STATIC_PREFIX } from './config'
+import { TimeoutInterceptor } from './common/interceptor/timeout.interceptor'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -77,6 +78,8 @@ async function bootstrap() {
 
   // 将 SuccessResponse 拦截器注册为全局拦截器
   app.useGlobalInterceptors(new SuccessResponse(nestWinston))
+  // 将 TimeoutInterceptor 拦截器注册为全局拦截器，10s 超时
+  app.useGlobalInterceptors(new TimeoutInterceptor(10000))
   // 捕捉全局错误
   app.useGlobalFilters(new HttpFaild(nestWinston))
 

@@ -12,6 +12,13 @@ export enum ConfigEnum {
   ALI_ACCESS_KEY_SECRET = 'ALI_ACCESS_KEY_SECRET',
   OSS_BUCKET = 'OSS_BUCKET',
   OSS_REGION = 'OSS_REGION',
+  SMS_SignName = 'Sms_SignName',
+  SMS_TemplateCode = 'Sms_TemplateCode',
+  // 邮箱
+  EMAIL_HOST = 'EMAIL_HOST',
+  EMAIL_PORT = 'EMAIL_PORT',
+  EMAIL_USER = 'EMAIL_USER',
+  EMAIL_PASS = 'EMAIL_PASS',
 }
 
 /**

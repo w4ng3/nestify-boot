@@ -3,9 +3,10 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import Dysmsapi20170525, * as $Dysmsapi20170525 from '@alicloud/dysmsapi20170525'
 import * as $OpenApi from '@alicloud/openapi-client'
 import Util, * as $Util from '@alicloud/tea-util'
-import { aliyConfig } from '@/config'
 import { InjectRedis } from '@liaoliaots/nestjs-redis'
 import Redis from 'ioredis'
+import { ConfigService } from '@nestjs/config'
+import { ConfigEnum } from '@/config/enum.config'
 
 @Injectable()
 export class SmsService {
@@ -29,8 +30,14 @@ export class SmsService {
   }
   private client: Dysmsapi20170525
 
-  constructor(@InjectRedis() private readonly redis: Redis) {
-    this.client = this.createClient(aliyConfig.accessKey, aliyConfig.accessSecret)
+  constructor(
+    @InjectRedis() private readonly redis: Redis,
+    private readonly configService: ConfigService,
+  ) {
+    this.client = this.createClient(
+      this.configService.get(ConfigEnum.ALI_ACCESS_KEY_ID),
+      this.configService.get(ConfigEnum.ALI_ACCESS_KEY_SECRET),
+    )
   }
 
   /**
@@ -48,8 +55,8 @@ export class SmsService {
     await this.redis.set(`smsCaptcha:${phone}`, captcha, 'EX', 3000)
 
     const sendSmsRequest = new $Dysmsapi20170525.SendSmsRequest({
-      signName: aliyConfig.signName,
-      templateCode: aliyConfig.templateCode,
+      signName: this.configService.get(ConfigEnum.SMS_SignName),
+      templateCode: this.configService.get(ConfigEnum.SMS_TemplateCode),
       phoneNumbers: phone,
       templateParam: `{"code":"${captcha}"}`,
     })
