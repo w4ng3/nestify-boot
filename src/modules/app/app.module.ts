@@ -11,6 +11,7 @@ import { WinstonOptionsConfig } from '@/config/winston.config'
 import { FileModule } from '@/modules/core/file/file.module'
 import { RedisModule } from '@liaoliaots/nestjs-redis'
 import { ConfigEnum } from '@/config/enum.config'
+import { QueuesModule } from '@/modules/core/queues/queues.module'
 
 const envFilePath = `.env.${process.env.NODE_ENV || `development`}`
 
@@ -23,12 +24,11 @@ const envFilePath = `.env.${process.env.NODE_ENV || `development`}`
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         return {
-          config: {
-            url: configService.get<string>(ConfigEnum.REDIS_URL),
-          },
+          config: { url: configService.get<string>(ConfigEnum.REDIS_URL) },
         }
       },
     }),
+    QueuesModule.register(),
     PrismaModule,
     UsersModule,
     PostsModule,

@@ -43,7 +43,6 @@ export class SmsService {
   /**
    * @description 发送短信（验证码）
    * @param phone 手机号
-   * @param code 验证码
    */
   async sendCode(phone: string): Promise<any> {
     // 请确保代码运行环境设置了环境变量 ALIBABA_CLOUD_ACCESS_KEY_ID 和 ALIBABA_CLOUD_ACCESS_KEY_SECRET。

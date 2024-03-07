@@ -160,7 +160,7 @@ test(@ReqUser('id') id: number, @ReqUser() user: UserJwtType) {
 
 使用了`nest-winston` 和 `winston`来打印日志，`winston-daily-rotate-file`负责管理日志文件，定期压缩与删除。
 
-已在全局响应和拦截器里使用，可参考用法。[Link~](src/common/response/http-faild.ts)
+已在全局响应和拦截器里使用，可参考用法。[Link~](src/common/interceptor/http-faild.ts)
 
 生产环境下，请注释掉`config/winston.config.ts`里的控制台日志。
 

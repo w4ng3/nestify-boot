@@ -14,20 +14,14 @@ import { Guest } from '@/common/decorator/guest.decorator'
 import { RequirePermission } from '@/common/decorator/permission.decorator'
 import { PermissionsEnum } from '@/config/enum.config'
 import { PermissionGuard } from './permission.guard'
-import { EmailService } from '@/common/services/email.service'
 import { MailInfoDto, SmsDto } from '@/common/model/params'
-import { SmsService } from '@/common/services/sms.service'
 
 @ApiTags('auth')
 @ApiBearerAuth()
 @UseGuards(PermissionGuard)
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private authService: AuthService,
-    private emailService: EmailService,
-    private smsService: SmsService,
-  ) {}
+  constructor(private authService: AuthService) {}
 
   @Guest()
   @ApiOperation({ summary: '注册' })
@@ -89,13 +83,13 @@ export class AuthController {
   @ApiOperation({ summary: '发送验证码邮件' })
   @Post('send-email')
   sendEmail(@Body() mailInfo: MailInfoDto) {
-    return this.emailService.sendCodeEmail(mailInfo)
+    return this.authService.addToEmailQueue('verify', { to: mailInfo.to })
   }
 
   @Guest()
   @ApiOperation({ summary: '发送短信验证码' })
   @Post('send-sms')
   sendSms(@Body() dot: SmsDto) {
-    return this.smsService.sendCode(dot.phone)
+    return this.authService.addToSmsQueue('verify', dot.phone)
   }
 }

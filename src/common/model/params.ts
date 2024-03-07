@@ -38,7 +38,7 @@ export class BaseVo {
  * 可以群发，把类型改为数组即可 string[]
  */
 export class MailInfoDto {
-  @ApiProperty({ description: '接收方邮箱', example: 'xxx@gmail.com' })
+  @ApiProperty({ description: '接收方邮箱', example: 'xxx@gmail.com', type: String })
   @IsEmail({}, { each: true, message: '邮箱格式不正确' })
   to: string
 }

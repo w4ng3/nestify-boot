@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import { UsersService } from '../users/users.service'
+import { UsersService } from '@/modules/users/users.service'
 import { CreateUserDto, LoginUserDto, ResetPasswordDto } from '@/modules/users/user.dto'
 import { AuthLoginVo, ProfileVo } from './auth.vo'
 import { UserJwtType } from '@/common/decorator/param.decorator'
@@ -11,6 +11,11 @@ import { addPermission, removePermission } from './permission.guard'
 import { PermissionsEnum } from '@/config/enum.config'
 import { InjectRedis } from '@liaoliaots/nestjs-redis'
 import Redis from 'ioredis'
+import { Queue } from 'bullmq'
+import { InjectEmailQueue, EmailJobName } from '@/modules/core/queues/email.processor'
+import Mail from 'nodemailer/lib/mailer'
+import { InjectSmsQueue, SmsJobName } from '@/modules/core/queues/sms.processor'
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -18,11 +23,33 @@ export class AuthService {
     private jwtService: JwtService,
     private prisma: PrismaService,
     @InjectRedis() private readonly redis: Redis,
+    @InjectEmailQueue() readonly emailQueue: Queue,
+    @InjectSmsQueue() readonly smsQueue: Queue,
   ) {}
 
   // async getFromRedis(key: string) {
   //   return await this.redis.get(key)
   // }
+
+  /**
+   * @description 添加邮件队列
+   * @param jobName 作业名称
+   * @param data 作业数据
+   */
+  async addToEmailQueue(jobName: EmailJobName, data: Mail.Options) {
+    const job = await this.emailQueue.add(jobName, data)
+    return { jobId: job.id, describe: '邮件即将发送，请注意查收', to: data.to }
+  }
+
+  /**
+   * @description 添加短信队列
+   * @param jobName 作业名称
+   * @param phone 手机号
+   */
+  async addToSmsQueue(jobName: SmsJobName, phone: string) {
+    const job = await this.smsQueue.add(jobName, phone)
+    return { jobId: job.id, describe: '短信即将发送，请注意查收', to: phone }
+  }
 
   /** @description 注册 */
   async register(dto: CreateUserDto): Promise<any> {
