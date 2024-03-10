@@ -15,7 +15,10 @@ export class AppController {
     // 测试超时拦截器
     await new Promise((resolve) => setTimeout(resolve, 1_000))
     // 体验粉笔效果，设置 console.log 的颜色
-    console.log(chalk.yellow.bgMagenta('Hello Nest!'), chalk.blue.underline.bold('use chalk'))
+    console.log(
+      chalk.yellow.bgMagenta('Hello Nest!'),
+      chalk.rgb(240, 161, 168).underline.bold('use chalk!'),
+    )
     return this.appService.getHello()
   }
 }

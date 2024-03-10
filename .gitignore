@@ -39,3 +39,12 @@ lerna-debug.log*
 
 #upload
 /upload
+
+#敏感信息
+#已提交的文件在此处添加了也无法被 ignore, 需要使用 git update-index --assume-unchanged [file] 
+#例如运行：git update-index --assume-unchanged .env 命令忽略 .env 后续的更改
+#恢复跟踪和提交则使用 `--no-assume-unchanged` 选项
+.env
+.env.development
+.env.production
+.vercel

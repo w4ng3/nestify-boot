@@ -49,6 +49,8 @@ $ pnpm run test:cov
 - 如果要同步数据库，那么使用`npx prisma db pull`或者`npx prisma db push`进行推送或拉取更新（如果在model里新增了非空字段且无默认值，那么push时会警告⚠️，需要使用`--force-reset`忽略所有警告，⚠️危险操作，会清空数据）
 - push 和 pull 不会生成记录，如果要在`prisma/migrations`里生成记录，需要运行`migrate dev`命令
 
+[Prisma Migrate 的开发和生产](https://prisma.nodejs.cn/concepts/components/prisma-migrate/migrate-development-production)
+
 ### Prisma文档生成器
 
 [Prisma文档生成器](https://github.com/pantharshit00/prisma-docs-generator) 从 Prisma 架构自动生成引用，可方便的查看 model 和 可使用的TS类型，每次运行时都会自动更新参考prisma generate。
