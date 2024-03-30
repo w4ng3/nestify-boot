@@ -21,7 +21,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prisma:doc": "prisma generate docs prisma/docs",
     "prisma:push": "prisma generate && prisma db push",
-    "gen": "node src/modules/core/crud/generate.js"
+    "gen": "node src/modules/core/crud/generate.js",
+    "vercel-build": "prisma generate && prisma migrate deploy && cross-env NODE_ENV=development nest build"
   },
   "dependencies": {
     "@alicloud/dysmsapi20170525": "2.0.24",

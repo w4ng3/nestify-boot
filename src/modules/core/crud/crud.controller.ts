@@ -92,11 +92,11 @@ export class CrudController {
   }
 
   /**
-   * @description: 分页查询已软删除的帖子
+   * @description: 分页查询已软删除
    * @param dto 分页查询参数
    * @param include 嵌套读取参数(关联查询)
    */
-  @ApiOperation({ summary: '分页查询已软删除的帖子' })
+  @ApiOperation({ summary: '分页查询已软删除' })
   @Post('deleted/page')
   findPageOfDeleted(@Body() dto: any, @CrudInclude() inc?: any) {
     return this.service.findPage(dto, inc, QueryMode.DEL)

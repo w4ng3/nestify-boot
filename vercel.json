@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "name": "nestify-boot",
   "builds": [
     {
       "src": "dist/main.js",
