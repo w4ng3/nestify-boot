@@ -1,6 +1,6 @@
 # 核心模块
 
-## Fast CRUD
+## Fast-CRUD
 
 快速生成 crud 模块（包含 module、controller、service、dto 文件）
 

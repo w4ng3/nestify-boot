@@ -8,8 +8,8 @@
 
 ## 功能
 
-- 快速 CRUD：[查看文档](./src/modules/core/readme.md#Fast CRUD)，快速生成 crud 模块（只需定义 prisma 数据模型，便可生成 module、controller、service、dto 文件，有新增、单个查询、查询全部、分页查询、更新、批量删除、批量恢复等接口）；
-- [OpenAPI/Swagger 文档](#OpenAPI/Swagger 文档)
+- 快速 CRUD：[查看文档](./src/modules/core/readme.md#Fast-CRUD)，快速生成 crud 模块（只需定义 prisma 数据模型，便可生成 module、controller、service、dto 文件，有新增、单个查询、查询全部、分页查询、更新、批量删除、批量恢复等接口）；
+- [OpenAPI/Swagger 文档](#OpenAPI/Swagger文档)
 - [统一异常于响应处理](#统一响应与异常处理)
 - 单元测试： [查看文档](./src/modules/core/unit-test.md) ；
 - file 文件上传/下载：上传到本地或OSS，生成文件预览地址；
@@ -22,7 +22,7 @@
 
 
 - ~~Docker 部署~~ : 待完善
-- [~~Serverless 部署~~](#Serverless 部署)
+- [~~Serverless 部署~~](#Serverless部署)
 - [Prisma文档生成器](#Prisma文档生成器)
 
 
@@ -73,7 +73,7 @@ $ pnpm run start:prod
 
 [Prisma Migrate 的开发和生产](https://prisma.nodejs.cn/concepts/components/prisma-migrate/migrate-development-production)
 
-## OpenAPI/Swagger 文档
+## OpenAPI/Swagger文档
 
 使用[@nestjs/swagger](https://nest.nodejs.cn/openapi/introduction)集成swagger功能。
 
@@ -125,7 +125,7 @@ test(@ReqUser('id') id: number, @ReqUser() user: UserJwtType) {
 
 在 `permission.guard.ts` 里定义了权限守卫，具体用法可参考`auth.controller.ts`文件。
 
-## Serverless 部署
+## Serverless部署
 
 使用 vercel 部署这个项目遇到些问题，例如文件上传和日志等代码的存在会导致无法成功部署，还有环境变量的读取问题待解决。建议用 docker
 
