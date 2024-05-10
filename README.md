@@ -19,12 +19,9 @@
 - [JWT身份验证](#JWT身份验证)
 - [权限管理](#权限管理)
 - 日志：使用 winston 打印日志，保存在根目录 logs 文件夹;
-
-
-- ~~Docker 部署~~ : 待完善
+- [Docker 部署](#docker部署)
 - [~~Serverless 部署~~](#Serverless部署)
 - [Prisma文档生成器](#Prisma文档生成器)
-
 
 ## 项目运行
 
@@ -72,6 +69,18 @@ $ pnpm run start:prod
 - push 和 pull 不会生成记录，如果要在`prisma/migrations`里生成记录，需要运行`migrate dev`命令,
 
 [Prisma Migrate 的开发和生产](https://prisma.nodejs.cn/concepts/components/prisma-migrate/migrate-development-production)
+
+
+## Docker部署
+```bash
+# 1.打包
+$ pnpm run docker:build
+# 2.构建镜像
+$ docker build -t my-nest-app .
+# 3.运行容器
+docker run -itd -p 3000:3000 --name nestify-boot my-nest-app
+```
+> 如果是本地运行，且使用宿主机上的 Redis 服务，那么需要修改 `.env.development` 文件里的 `REDIS_HOST` 为 `host.docker.internal`来代替 `localhost`,以便连接到宿主机上的 Redis 服务（同时也要修改 `REDIS_URL`）。
 
 ## OpenAPI/Swagger文档
 
