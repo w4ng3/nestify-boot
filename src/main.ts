@@ -28,6 +28,7 @@ async function bootstrap() {
   app.enableCors({ origin: '*' }) // 允许跨域
 
   // 安全性中间件
+  // @ts-ignore
   await app.register(helmet, {
     contentSecurityPolicy: {
       directives: {
@@ -40,6 +41,7 @@ async function bootstrap() {
   })
 
   // 文件上传中间件
+  // @ts-ignore
   await app.register(contentParser)
   // 静态文件服务,可以直接访问 根目录上层的 nest-static 文件夹下的文件，
   // 例如：http://localhost:3000/assets/1.jpg

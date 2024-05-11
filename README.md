@@ -78,7 +78,9 @@ $ pnpm run docker:build
 # 2.构建镜像
 $ docker build -t my-nest-app .
 # 3.运行容器
-docker run -itd -p 3000:3000 --name nestify-boot my-nest-app
+$ docker run -itd -p 3000:3000 --name nestify-boot my-nest-app
+# 若要将日志和上传图片挂载，那么可以使用 `-v` 参数来挂载日志和上传图片目录。
+# $ docker run -itd -p 3000:3000 -v /path/to/logs:/app/logs -v /path/to/uploads:/nest-static --name nestify-boot my-nest-app
 ```
 > 如果是本地运行，且使用宿主机上的 Redis 服务，那么需要修改 `.env.development` 文件里的 `REDIS_HOST` 为 `host.docker.internal`来代替 `localhost`,以便连接到宿主机上的 Redis 服务（同时也要修改 `REDIS_URL`）。
 

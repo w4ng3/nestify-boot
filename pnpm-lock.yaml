@@ -98,9 +98,6 @@ importers:
       reflect-metadata:
         specifier: ^0.1.12
         version: 0.1.14
-      rimraf:
-        specifier: ^5.0.5
-        version: 5.0.5
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
@@ -4137,11 +4134,6 @@ packages:
 
   rimraf@4.4.1:
     resolution: {integrity: sha512-Gk8NlF062+T9CqNGn6h4tls3k6T1+/nXdOcSZVikNVtlRdYpA7wRJJMoXmuvOnLW844rPjdQ7JgXCYM6PPC/og==}
-    engines: {node: '>=14'}
-    hasBin: true
-
-  rimraf@5.0.5:
-    resolution: {integrity: sha512-CqDakW+hMe/Bz202FPEymy68P+G50RfMQK+Qo5YUqc9SPipvbGjCGKd0RSKEelbsfQuw3g5NZDSrlZZAJurH1A==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -9636,10 +9628,6 @@ snapshots:
   rimraf@4.4.1:
     dependencies:
       glob: 9.3.5
-
-  rimraf@5.0.5:
-    dependencies:
-      glob: 10.3.10
 
   run-applescript@3.2.0:
     dependencies:
