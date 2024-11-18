@@ -38,4 +38,4 @@ const envFilePath = `.env.${process.env.NODE_ENV || `development`}`
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

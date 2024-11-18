@@ -95,6 +95,12 @@ importers:
       nodemailer:
         specifier: ^6.9.11
         version: 6.9.11
+      prisma:
+        specifier: ^5.8.1
+        version: 5.8.1
+      prisma-docs-generator:
+        specifier: ^0.8.0
+        version: 0.8.0
       reflect-metadata:
         specifier: ^0.1.12
         version: 0.1.14
@@ -180,12 +186,6 @@ importers:
       prettier:
         specifier: ^3.2.2
         version: 3.2.2
-      prisma:
-        specifier: ^5.8.1
-        version: 5.8.1
-      prisma-docs-generator:
-        specifier: ^0.8.0
-        version: 0.8.0
       source-map-support:
         specifier: ^0.5.21
         version: 0.5.21

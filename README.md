@@ -4,7 +4,8 @@
 <H1 align="center">Nest 最佳实践</H1>
 
 ## Description
-**主要技术栈**： [Nest](https://github.com/nestjs/nest) + [Fastify](https://www.fastify.cn/) + [Prisma](https://prisma.nodejs.cn/) + mysql + [TypeScript](https://www.tslang.cn/docs/home.html) 
+
+**主要技术栈**： [Nest](https://github.com/nestjs/nest) + [Fastify](https://www.fastify.cn/) + [Prisma](https://prisma.nodejs.cn/) + mysql + [TypeScript](https://www.tslang.cn/docs/home.html)
 
 ## 功能
 
@@ -34,8 +35,8 @@
 在运行项目之前，需要修改配置文件
 
 - 在`.env` 文件里配置数据库连接；
-- 在`.env.development`文件里配置 Redis、OSS、EMAIL、SMS信息  （非必需）;
-- 还可在`src/config/index.ts` 文件里修改*全局路由前缀*、*图片上传目录*；
+- 在`.env.development`文件里配置 Redis、OSS、EMAIL、SMS信息 （非必需）;
+- 还可在`src/config/index.ts` 文件里修改*全局路由前缀*、_图片上传目录_；
 
 ### 运行命令
 
@@ -60,6 +61,14 @@ $ pnpm run start:prod
 
 项目运行后浏览器打开 `http://localhost:3000/swagger#` 查看api文档
 
+登录后获取的 access_token 要在前面拼接 Bearer 使用，header格式为
+
+```ts
+{
+  Authorization: `Bearer ${access_token}`
+}
+```
+
 #### prisma tips
 
 - 首次启动前，先运行 `npx prisma migrate dev --name "init"` 将运行迁移脚本以在数据库中创建实体表。
@@ -70,8 +79,8 @@ $ pnpm run start:prod
 
 [Prisma Migrate 的开发和生产](https://prisma.nodejs.cn/concepts/components/prisma-migrate/migrate-development-production)
 
-
 ## Docker部署
+
 ```bash
 # 1.打包
 $ pnpm run docker:build
@@ -82,6 +91,7 @@ $ docker run -itd -p 3000:3000 --name nestify-boot my-nest-app
 # 若要将日志和上传图片挂载，那么可以使用 `-v` 参数来挂载日志和上传图片目录。
 # $ docker run -itd -p 3000:3000 -v /path/to/logs:/app/logs -v /path/to/uploads:/nest-static --name nestify-boot my-nest-app
 ```
+
 > 如果是本地运行，且使用宿主机上的 Redis 服务，那么需要修改 `.env.development` 文件里的 `REDIS_HOST` 为 `host.docker.internal`来代替 `localhost`,以便连接到宿主机上的 Redis 服务（同时也要修改 `REDIS_URL`）。
 
 ## OpenAPI/Swagger文档
@@ -128,8 +138,6 @@ test(@ReqUser('id') id: number, @ReqUser() user: UserJwtType) {
 - [你有没有这样的疑惑，为什么要refreshToken？](https://juejin.cn/post/7081578246055133214)
 - [前端使用RefreshToken?是道德的沦丧还是前端的瞎搞?](https://juejin.cn/post/7263117148373205049?from=search-suggest)
 
-
-
 ## 权限管理
 
 使用二进制位运算进行权限管理，参考自[权限控制 | 使用二进制做权限控制功能](https://zhuanlan.zhihu.com/p/30103832)
@@ -139,8 +147,6 @@ test(@ReqUser('id') id: number, @ReqUser() user: UserJwtType) {
 ## Serverless部署
 
 使用 vercel 部署这个项目遇到些问题，例如文件上传和日志等代码的存在会导致无法成功部署，还有环境变量的读取问题待解决。建议用 docker
-
-
 
 ## Prisma文档生成器
 
